@@ -1,0 +1,251 @@
+{
+	"openapi": "3.1.0",
+	"servers": [],
+	"info": {
+		"description": "FE Assignment API",
+		"version": "1.0.6",
+		"title": "frontend_assignment_api",
+		"termsOfService": "http://swagger.io/terms/",
+		"contact": {
+			"email": ""
+		},
+		"license": {
+			"name": "ISC",
+			"url": ""
+		}
+	},
+	"paths": {
+		"/api/v1/shelters/results": {
+			"get": {
+				"tags": [
+					"Shelters-Results"
+				],
+				"security": [],
+				"operationId": "getApiV1SheltersResults",
+				"description": "",
+				"parameters": [
+					{
+						"name": "search",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"nullable": true,
+							"example": "tezas"
+						},
+						"required": false
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"contributors": {
+											"type": "integer",
+											"example": 4
+										},
+										"contribution": {
+											"type": "number",
+											"format": "float",
+											"nullable": true,
+											"example": 7.5
+										}
+									},
+									"required": [
+										"contributors",
+										"contribution"
+									],
+									"additionalProperties": false
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/shelters/contribute": {
+			"post": {
+				"tags": [
+					"Shelters-Contribute"
+				],
+				"security": [],
+				"operationId": "postApiV1SheltersContribute",
+				"description": "",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "Success response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"messages": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"properties": {
+													"message": {
+														"type": "string",
+														"example": "Príspevok bol úspešne zaznamenaný"
+													},
+													"type": {
+														"type": "string",
+														"enum": [
+															"ERROR",
+															"WARNING",
+															"INFO",
+															"SUCCESS"
+														],
+														"example": "SUCCESS"
+													}
+												},
+												"required": [
+													"message",
+													"type"
+												],
+												"additionalProperties": false
+											}
+										}
+									},
+									"required": [
+										"messages"
+									],
+									"additionalProperties": false
+								}
+							}
+						}
+					}
+				},
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"contributors": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"firstName": {
+													"type": "string",
+													"example": "Jan"
+												},
+												"lastName": {
+													"type": "string",
+													"example": "Dobry"
+												},
+												"email": {
+													"type": "string",
+													"format": "email",
+													"example": "email@email.com"
+												},
+												"phone": {
+													"type": "string",
+													"nullable": true,
+													"example": "0900 000 000"
+												}
+											},
+											"required": [
+												"firstName",
+												"lastName",
+												"email"
+											],
+											"additionalProperties": false
+										}
+									},
+									"shelterID": {
+										"type": "number",
+										"format": "float",
+										"nullable": true,
+										"example": 1
+									},
+									"value": {
+										"type": "number",
+										"format": "float",
+										"minimum": 0,
+										"example": 1.5
+									}
+								},
+								"required": [
+									"contributors",
+									"value"
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/shelters/": {
+			"get": {
+				"tags": [
+					"Shelters"
+				],
+				"security": [],
+				"operationId": "getApiV1Shelters",
+				"description": "",
+				"parameters": [
+					{
+						"name": "search",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"nullable": true,
+							"example": "tezas"
+						},
+						"required": false
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"shelters": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"properties": {
+													"id": {
+														"type": "integer",
+														"example": 4
+													},
+													"name": {
+														"type": "string",
+														"example": "Útulok pre psov - TEZAS"
+													}
+												},
+												"required": [
+													"id",
+													"name"
+												],
+												"additionalProperties": false
+											}
+										}
+									},
+									"additionalProperties": false
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"externalDocs": {
+		"description": "Find out more about Swagger",
+		"url": "http://swagger.io"
+	},
+	"components": {
+		"securitySchemes": {}
+	},
+	"security": []
+}
