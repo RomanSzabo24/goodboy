@@ -14,7 +14,8 @@
   },
   "results": {
     "totalRaised": "Celková vyzbieraná hodnota",
-    "donorCount": "Počet darcov"
+    "donorCount": "Počet darcov",
+    "refreshError": "Údaje sa nepodarilo aktualizovať, zobrazujú sa posledné známe hodnoty."
   },
   "form": {
     "back": "Späť",

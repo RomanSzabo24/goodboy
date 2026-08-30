@@ -1,5 +1,6 @@
 "use client";
 
+import { TriangleAlertIcon } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 
 import { useSheltersResults } from "@/hooks/use-shelters";
@@ -12,7 +13,7 @@ import type { ResultsResponse } from "@/services/shelters";
 export function ResultsSummary({ initialData }: { initialData: ResultsResponse }) {
   const t = useTranslations("results");
   const format = useFormatter();
-  const { data } = useSheltersResults(undefined);
+  const { data, isError } = useSheltersResults(undefined);
   const results = data ?? initialData;
 
   const metrics = [
@@ -31,13 +32,21 @@ export function ResultsSummary({ initialData }: { initialData: ResultsResponse }
   ];
 
   return (
-    <div className="flex w-full flex-wrap items-start justify-center gap-4 border-y py-16">
-      {metrics.map((metric) => (
-        <div key={metric.label} className="flex min-w-60 flex-1 flex-col items-center gap-3">
-          <p className="text-center text-heading-xl font-semibold text-primary">{metric.value}</p>
-          <p className="text-center text-lg font-medium text-foreground">{metric.label}</p>
-        </div>
-      ))}
+    <div className="flex w-full flex-col items-center gap-4 border-y py-16">
+      <div className="flex w-full flex-wrap items-start justify-center gap-4">
+        {metrics.map((metric) => (
+          <div key={metric.label} className="flex min-w-60 flex-1 flex-col items-center gap-3">
+            <p className="text-center text-heading-xl font-semibold text-primary">{metric.value}</p>
+            <p className="text-center text-lg font-medium text-foreground">{metric.label}</p>
+          </div>
+        ))}
+      </div>
+      {isError && (
+        <p role="alert" className="flex items-center gap-2 text-sm text-muted-foreground">
+          <TriangleAlertIcon className="size-4 shrink-0" aria-hidden="true" />
+          {t("refreshError")}
+        </p>
+      )}
     </div>
   );
 }

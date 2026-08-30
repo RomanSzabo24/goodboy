@@ -14,7 +14,8 @@
   },
   "results": {
     "totalRaised": "Total amount raised",
-    "donorCount": "Number of donors"
+    "donorCount": "Number of donors",
+    "refreshError": "Couldn't refresh the latest data, showing the last known values."
   },
   "form": {
     "back": "Back",

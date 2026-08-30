@@ -22,7 +22,7 @@
 | 3 | Form validation schemas | ✅ 7 / 7 |
 | 4 | Form state (Zustand + RHF) | ✅ 4 / 4 (with noted deviations) |
 | 5 | UI — form steps (restructured — see notes) | 🟡 11 / 12 |
-| 6 | Submission, results, Contact + About pages | 🟡 7 / 8 |
+| 6 | Submission, results, Contact + About pages | ✅ 8 / 8 |
 | 7 | Accessibility and responsiveness | 🟡 2 / 6 |
 | 8 | Tests | 🟡 4 / 6 |
 | 9 | Bonuses ⭐ | 🟡 2 / 6 (+1 partial) |
@@ -174,7 +174,7 @@ Base URL: `https://frontend-assignment-api.goodrequest.dev`, endpoints per [open
 > 📍 **Commit:** `feat: form submission with success/error states` (not yet made)
 
 - [x] "Total raised + donor count" widget (`ResultsSummary`) bound to `useSheltersResults` (client, `refetchInterval: 30_000`) seeded with a server-fetched `initialData` prop; currency formatted via next-intl's locale-aware `useFormatter()`. **Lives only on `/about`** — Figma shows these totals on the "O projekte" frame and nowhere else (it was wrongly placed on the donation form in the first Figma pass).
-- [ ] Loading skeleton and error fallback for the widget — 🟡 **partial by design, not fully done:** because the page always passes real `initialData` from the server, there's no loading flash to cover — but there's also **no visible error state** if the client-side refetch fails; it silently keeps showing the last good (or initial) data with no indicator to the user
+- [x] Loading skeleton and error fallback for the widget — no loading skeleton needed (real `initialData` from the server means no loading flash to cover); a visible error fallback was added for a failed client-side refetch — `ResultsSummary` now reads `isError` from `useSheltersResults` and shows a localized inline warning below the metrics while still displaying the last good (or initial) data
 
 > 📍 **Commit:** `feat: totals/donor-count results widget` (not yet made)
 
