@@ -72,7 +72,11 @@
   --secondary-foreground: #374151;
   /* color/base/surface/tertiary + color/base/content/quaternary */
   --muted: #f3f4f6;
-  --muted-foreground: #9ca3af;
+  /* Figma's literal token (#9ca3af, Tailwind gray-400) is ~2.5:1 on white,
+     failing WCAG AA (4.5:1) for the body/hint text it's used as (FieldDescription,
+     the "(Nepovinné)" hint). Darkened one Tailwind step to gray-500 (#6b7280,
+     ~4.8:1) — same muted-gray intent, passes AA. */
+  --muted-foreground: #6b7280;
   /* color/base/action/primary/bg + color/base/action/primary/default */
   --accent: #e0e7ff;
   --accent-foreground: #4f46e5;

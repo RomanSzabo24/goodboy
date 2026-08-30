@@ -78,12 +78,13 @@ export function ConfirmStep({ form, shelters }: ConfirmStepProps) {
                 checked={consentField.value}
                 onCheckedChange={(checked) => consentField.onChange(checked === true)}
                 aria-invalid={!!form.formState.errors.consent}
+                aria-describedby={form.formState.errors.consent ? "consent-error" : undefined}
               />
             )}
           />
           <span>{tPersonal("consentLabel")}</span>
         </FieldLabel>
-        <FieldError errors={[form.formState.errors.consent]} />
+        <FieldError id="consent-error" errors={[form.formState.errors.consent]} />
       </Field>
     </div>
   );

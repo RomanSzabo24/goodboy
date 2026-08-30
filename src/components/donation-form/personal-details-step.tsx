@@ -139,9 +139,10 @@ export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
                     id={`contributors.${index}.name`}
                     autoComplete="given-name"
                     aria-invalid={!!errors?.name}
+                    aria-describedby={errors?.name ? `contributors.${index}.name-error` : undefined}
                     {...form.register(`contributors.${index}.name`)}
                   />
-                  <FieldError errors={[errors?.name]} />
+                  <FieldError id={`contributors.${index}.name-error`} errors={[errors?.name]} />
                 </Field>
 
                 <Field data-invalid={!!errors?.surname}>
@@ -152,9 +153,10 @@ export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
                     id={`contributors.${index}.surname`}
                     autoComplete="family-name"
                     aria-invalid={!!errors?.surname}
+                    aria-describedby={errors?.surname ? `contributors.${index}.surname-error` : undefined}
                     {...form.register(`contributors.${index}.surname`)}
                   />
-                  <FieldError errors={[errors?.surname]} />
+                  <FieldError id={`contributors.${index}.surname-error`} errors={[errors?.surname]} />
                 </Field>
               </div>
 
@@ -165,9 +167,10 @@ export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
                   type="email"
                   autoComplete="email"
                   aria-invalid={!!errors?.email}
+                  aria-describedby={errors?.email ? `contributors.${index}.email-error` : undefined}
                   {...form.register(`contributors.${index}.email`)}
                 />
-                <FieldError errors={[errors?.email]} />
+                <FieldError id={`contributors.${index}.email-error`} errors={[errors?.email]} />
               </Field>
 
               <Field data-invalid={!!errors?.phone}>
@@ -182,10 +185,11 @@ export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
                       onChange={phoneField.onChange}
                       onBlur={phoneField.onBlur}
                       aria-invalid={!!errors?.phone}
+                      aria-describedby={errors?.phone ? `contributors.${index}.phone-error` : undefined}
                     />
                   )}
                 />
-                <FieldError errors={[errors?.phone]} />
+                <FieldError id={`contributors.${index}.phone-error`} errors={[errors?.phone]} />
               </Field>
             </FieldSet>
           </div>

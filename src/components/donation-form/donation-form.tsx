@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -92,10 +92,38 @@ export function DonationForm({ shelters }: { shelters: Shelter[] }) {
       : getFieldErrorMessages(errors, STEP_FIELDS[step]);
   }, [attempted, errors, step]);
 
+  // Every control that can be invalid also gets `aria-invalid`, so after a
+  // failed validation attempt the first offending control can always be
+  // found generically instead of maintaining a per-step ref map.
+  const stepContentRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const isFirstRender = useRef(true);
+
+  function focusFirstInvalidField() {
+    stepContentRef.current
+      ?.querySelector<HTMLElement>('[aria-invalid="true"]')
+      ?.focus();
+  }
+
+  // Move focus to the new step's heading on every step change so keyboard
+  // and screen-reader users get a clear signal the view advanced, without
+  // stealing focus from the URL bar on the initial page load.
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    headingRef.current?.focus();
+  }, [step]);
+
   async function handleNext() {
     setAttemptedStep(step);
     const valid = await form.trigger(STEP_FIELDS[step]);
-    if (valid) goNext();
+    if (valid) {
+      goNext();
+      return;
+    }
+    requestAnimationFrame(focusFirstInvalidField);
   }
 
   async function handleSubmit(values: DonationFormValues) {
@@ -133,13 +161,21 @@ export function DonationForm({ shelters }: { shelters: Shelter[] }) {
   return (
     <div className="flex flex-1 flex-col gap-10 lg:gap-6">
       <StepIndicator currentIndex={stepIndex} />
-      <h1 className="w-full text-heading-lg font-bold text-foreground">{t(`heading.${step}`)}</h1>
+      <h1
+        ref={headingRef}
+        tabIndex={-1}
+        className="w-full text-heading-lg font-bold text-foreground outline-none"
+      >
+        {t(`heading.${step}`)}
+      </h1>
 
       <ErrorSummary messages={errorMessages} />
 
-      {step === "shelter" && <ShelterStep form={form} shelters={shelters} />}
-      {step === "details" && <PersonalDetailsStep form={form} />}
-      {step === "confirm" && <ConfirmStep form={form} shelters={shelters} />}
+      <div ref={stepContentRef} className="contents">
+        {step === "shelter" && <ShelterStep form={form} shelters={shelters} />}
+        {step === "details" && <PersonalDetailsStep form={form} />}
+        {step === "confirm" && <ConfirmStep form={form} shelters={shelters} />}
+      </div>
 
       {/* Figma pins the actions to the bottom of the content column. */}
       <div className="mt-auto flex items-center justify-between gap-4 pt-2">
@@ -160,7 +196,9 @@ export function DonationForm({ shelters }: { shelters: Shelter[] }) {
             disabled={contribute.isPending}
             onClick={(event) => {
               setAttemptedStep(step);
-              void form.handleSubmit(handleSubmit)(event);
+              void form.handleSubmit(handleSubmit, () => {
+                requestAnimationFrame(focusFirstInvalidField);
+              })(event);
             }}
           >
             {contribute.isPending ? t("submitting") : t("donate")}

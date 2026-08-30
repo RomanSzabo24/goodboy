@@ -95,6 +95,7 @@ export function ShelterStep({ form, shelters }: ShelterStepProps) {
                 id="shelter-id"
                 className="w-full"
                 aria-invalid={!!form.formState.errors.shelterId}
+                aria-describedby={form.formState.errors.shelterId ? "shelter-id-error" : undefined}
               >
                 <SelectValue placeholder={t("shelterPlaceholder")} />
               </SelectTrigger>
@@ -108,7 +109,7 @@ export function ShelterStep({ form, shelters }: ShelterStepProps) {
             </Select>
           )}
         />
-        <FieldError errors={[form.formState.errors.shelterId]} />
+        <FieldError id="shelter-id-error" errors={[form.formState.errors.shelterId]} />
       </Field>
 
       <Field data-invalid={!!form.formState.errors.amount}>
@@ -124,6 +125,7 @@ export function ShelterStep({ form, shelters }: ShelterStepProps) {
               type="text"
               inputMode="decimal"
               aria-invalid={!!form.formState.errors.amount}
+              aria-describedby={form.formState.errors.amount ? "amount-error" : undefined}
               className="w-32 bg-transparent text-center text-heading-xl text-foreground outline-none placeholder:text-muted-foreground sm:w-40"
               placeholder="0"
               {...form.register("amount", { valueAsNumber: true })}
@@ -155,7 +157,7 @@ export function ShelterStep({ form, shelters }: ShelterStepProps) {
             ))}
           </ToggleGroup>
         </div>
-        <FieldError errors={[form.formState.errors.amount]} />
+        <FieldError id="amount-error" errors={[form.formState.errors.amount]} />
       </Field>
     </FieldSet>
   );

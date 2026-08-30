@@ -29,6 +29,7 @@ type PhoneInputProps = {
   onChange: (value: string) => void;
   onBlur?: () => void;
   "aria-invalid"?: boolean;
+  "aria-describedby"?: string;
 };
 
 export function PhoneInput({ id, value, onChange, onBlur, ...props }: PhoneInputProps) {
