@@ -149,6 +149,7 @@ export function PersonalDetailsStep({ form, className }: PersonalDetailsStepProp
                   <Input
                     id={`contributors.${index}.name`}
                     autoComplete="given-name"
+                    placeholder={t("namePlaceholder")}
                     aria-invalid={!!errors?.name}
                     aria-describedby={errors?.name ? `contributors.${index}.name-error` : undefined}
                     {...form.register(`contributors.${index}.name`)}
@@ -163,6 +164,7 @@ export function PersonalDetailsStep({ form, className }: PersonalDetailsStepProp
                   <Input
                     id={`contributors.${index}.surname`}
                     autoComplete="family-name"
+                    placeholder={t("surnamePlaceholder")}
                     aria-invalid={!!errors?.surname}
                     aria-describedby={errors?.surname ? `contributors.${index}.surname-error` : undefined}
                     {...form.register(`contributors.${index}.surname`)}
@@ -177,6 +179,7 @@ export function PersonalDetailsStep({ form, className }: PersonalDetailsStepProp
                   id={`contributors.${index}.email`}
                   type="email"
                   autoComplete="email"
+                  placeholder={t("emailPlaceholder")}
                   aria-invalid={!!errors?.email}
                   aria-describedby={errors?.email ? `contributors.${index}.email-error` : undefined}
                   {...form.register(`contributors.${index}.email`)}
