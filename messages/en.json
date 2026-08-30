@@ -53,6 +53,7 @@
     "yourDetails": "About you",
     "donorNumber": "Donor {number}",
     "removeDonorAriaLabel": "Remove donor {number}",
+    "edit": "Edit",
     "nameLabel": "Name",
     "surnameLabel": "Surname",
     "emailLabel": "E-mail address",
