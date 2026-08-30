@@ -30,20 +30,20 @@ export default async function ContactPage({
 
   const cards = [
     {
-      icon: "/images/contact-icon-mail.png",
+      icon: "/images/icons/contact-icon-mail.png",
       title: t("emailTitle"),
       supporting: t("emailSupporting"),
       href: "mailto:info@goodboyfoundation.sk",
       value: "info@goodboyfoundation.sk",
     },
     {
-      icon: "/images/contact-icon-office.png",
+      icon: "/images/icons/contact-icon-office.png",
       title: t("officeTitle"),
       supporting: t("officeSupporting"),
       value: t("addressLine"),
     },
     {
-      icon: "/images/contact-icon-phone.png",
+      icon: "/images/icons/contact-icon-phone.png",
       title: t("phoneTitle"),
       supporting: t("phoneSupporting"),
       href: "tel:+421911750750",
