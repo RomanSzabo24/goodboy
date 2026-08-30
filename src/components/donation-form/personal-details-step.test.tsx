@@ -15,8 +15,11 @@ import {
 import messages from "../../../messages/en.json";
 
 function TestHarness() {
+  // Mirrors DonationForm's mode: "onBlur", so error rendering here reflects
+  // what actually happens when this step is embedded in the real form.
   const form = useForm<DonationFormInput, unknown, DonationFormValues>({
     resolver: zodResolver(donationFormSchema),
+    mode: "onBlur",
     defaultValues: donationFormDefaultValues,
   });
 
@@ -71,5 +74,44 @@ describe("PersonalDetailsStep", () => {
     await user.click(screen.getByRole("button", { name: "Edit" }));
 
     expect(screen.getAllByLabelText("Surname")).toHaveLength(2);
+  });
+
+  it("renders an inline error when the e-mail field is blurred with an invalid value", async () => {
+    const user = userEvent.setup();
+    render(<TestHarness />);
+
+    await user.type(screen.getByLabelText("E-mail address"), "not-an-email");
+    await user.tab();
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("Enter a valid e-mail address");
+  });
+
+  it("renders an inline error when the phone field is blurred with an invalid value", async () => {
+    const user = userEvent.setup();
+    render(<TestHarness />);
+
+    await user.type(screen.getByLabelText("Phone number"), "123");
+    await user.tab();
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Enter a valid SK (+421) or CZ (+420) phone number",
+    );
+  });
+
+  it("clears the surname error once a valid value is entered and blurred", async () => {
+    const user = userEvent.setup();
+    render(<TestHarness />);
+    // Fill in the other required fields first so tabbing off surname later
+    // doesn't blur into (and flag) an unrelated empty field.
+    await user.type(screen.getByLabelText("E-mail address"), "novak@example.com");
+    await user.type(screen.getByLabelText("Phone number"), "900 000 000");
+
+    await user.click(screen.getByLabelText("Surname"));
+    await user.tab();
+    expect(await screen.findByText("Surname must be at least 2 characters")).toBeInTheDocument();
+
+    await user.type(screen.getByLabelText("Surname"), "Novak");
+    await user.tab();
+    expect(screen.queryByText("Surname must be at least 2 characters")).not.toBeInTheDocument();
   });
 });
