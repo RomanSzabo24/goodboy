@@ -39,7 +39,7 @@ export function ShelterStep({ form, shelters, className }: ShelterStepProps) {
   const amount = form.watch("amount");
   const presetValue = PRESET_AMOUNTS.includes(amount as (typeof PRESET_AMOUNTS)[number])
     ? String(amount)
-    : undefined;
+    : "";
 
   return (
     <FieldSet className={cn("gap-10 lg:gap-6", className)}>
@@ -76,7 +76,7 @@ export function ShelterStep({ form, shelters, className }: ShelterStepProps) {
           </RadioGroup>
         )}
       />
-
+dssd
       <Field data-invalid={!!form.formState.errors.shelterId}>
         <FieldLabel htmlFor="shelter-id">
           {t("shelterLabel")}{" "}
