@@ -109,7 +109,7 @@ export function DonationForm({ shelters }: { shelters: Shelter[] }) {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-10">
+    <div className="flex flex-1 flex-col gap-10 lg:gap-6">
       <StepIndicator currentIndex={stepIndex} />
       <h1 className="w-full text-heading-lg font-bold text-foreground">{t(`heading.${step}`)}</h1>
 

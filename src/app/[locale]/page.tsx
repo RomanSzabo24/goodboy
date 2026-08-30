@@ -22,7 +22,7 @@ export default async function Home({
     <main className="mx-auto flex min-h-screen w-full max-w-[1440px] gap-20 px-5 lg:pl-20">
       {/* Content column — the footer lives in here, so it stops where the
           photo starts, matching Figma. */}
-      <div className="flex w-full min-w-0 flex-col gap-10 py-10 sm:py-15 lg:max-w-[658px]">
+      <div className="flex w-full min-w-0 flex-col gap-10 py-10 sm:py-15 lg:max-w-[658px] lg:gap-6 lg:py-8">
         <DonationForm shelters={sheltersResponse.shelters} />
         <SiteFooter />
       </div>
