@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Controller, useFieldArray, type Path } from "react-hook-form";
+import { Controller, useFieldArray } from "react-hook-form";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -18,21 +18,11 @@ import {
 import { Input } from "@/components/ui/input";
 import type { DonationFormApi } from "@/components/donation-form/types";
 import { PhoneInput } from "@/components/donation-form/phone-input";
-import type { DonationFormInput } from "@/lib/validations/donation";
+import { contributorSchema } from "@/lib/validations/donation";
 
 type PersonalDetailsStepProps = {
   form: DonationFormApi;
 };
-
-/** The four leaf fields react-hook-form needs validated per contributor row. */
-function contributorFieldPaths(index: number): Path<DonationFormInput>[] {
-  return [
-    `contributors.${index}.name`,
-    `contributors.${index}.surname`,
-    `contributors.${index}.email`,
-    `contributors.${index}.phone`,
-  ] as Path<DonationFormInput>[];
-}
 
 export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
   const t = useTranslations("personalDetails");
@@ -40,10 +30,21 @@ export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
     control: form.control,
     name: "contributors",
   });
+  // Live values (not formState.errors, which only updates on blur/submit)
+  // so the "add donor" button reacts as soon as a row becomes valid.
+  const contributors = form.watch("contributors");
   // Rows that are correctly filled in and shown as a collapsed summary
   // instead of the full editable form. Keyed by useFieldArray's stable
   // field.id so it survives rows being added/removed at other indices.
   const [collapsedIds, setCollapsedIds] = useState<Set<string>>(new Set());
+
+  // Every row not already collapsed must be correctly filled in before
+  // another donor can be added — otherwise the form keeps growing with
+  // half-finished rows instead of one clear one at a time.
+  const canAddDonor = fields.every(
+    (field, index) =>
+      collapsedIds.has(field.id) || contributorSchema.safeParse(contributors[index]).success,
+  );
 
   function expandRow(id: string) {
     setCollapsedIds((prev) => {
@@ -62,20 +63,10 @@ export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
     remove(index);
   }
 
-  // Collapse every already-valid donor row before adding a new one, so the
-  // form doesn't grow into a wall of repeated fields. `form.formState.errors`
-  // read from this closure reflects the render that created it, not the
-  // trigger() call below, so validity comes from trigger()'s own resolved
-  // booleans instead.
-  async function handleAddDonor() {
-    const validity = await Promise.all(
-      fields.map((_, index) => form.trigger(contributorFieldPaths(index))),
-    );
+  function handleAddDonor() {
     setCollapsedIds((prev) => {
       const next = new Set(prev);
-      fields.forEach((field, index) => {
-        if (validity[index]) next.add(field.id);
-      });
+      fields.forEach((field) => next.add(field.id));
       return next;
     });
     append({ name: "", surname: "", email: "", phone: "" });
@@ -201,7 +192,13 @@ export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
         );
       })}
 
-      <Button type="button" variant="outline" size="sm" onClick={handleAddDonor}>
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        onClick={handleAddDonor}
+        disabled={!canAddDonor}
+      >
         <Plus /> {t("addDonor")}
       </Button>
     </FieldGroup>

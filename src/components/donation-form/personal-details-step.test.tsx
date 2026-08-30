@@ -48,14 +48,18 @@ describe("PersonalDetailsStep", () => {
     expect(screen.getByLabelText("E-mail address")).toHaveValue("");
   });
 
-  it("does not collapse a donor row that is missing required fields", async () => {
+  it("disables the add donor button until the current row is filled in correctly", async () => {
     const user = userEvent.setup();
     render(<TestHarness />);
 
-    await user.click(screen.getByRole("button", { name: "Add another donor" }));
+    expect(screen.getByRole("button", { name: "Add another donor" })).toBeDisabled();
 
-    expect(screen.queryByRole("button", { name: "Edit" })).not.toBeInTheDocument();
-    expect(screen.getAllByLabelText("Surname")).toHaveLength(2);
+    // Filling only the optional field must not be enough to enable it.
+    await user.type(screen.getByLabelText("Name"), "Peter");
+    expect(screen.getByRole("button", { name: "Add another donor" })).toBeDisabled();
+
+    await fillFirstDonor(user);
+    expect(screen.getByRole("button", { name: "Add another donor" })).toBeEnabled();
   });
 
   it("expands a collapsed donor back into an editable form via the Edit button", async () => {
