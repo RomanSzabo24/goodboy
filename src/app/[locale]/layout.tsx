@@ -33,6 +33,10 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata" });
   return {
+    // Required to resolve the og:image file-convention route (and any
+    // relative URL-based metadata field) to an absolute URL. Override with
+    // the real deployment URL via NEXT_PUBLIC_SITE_URL in production.
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
     title: t("homeTitle"),
     description: t("homeDescription"),
   };
