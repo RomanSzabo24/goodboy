@@ -45,6 +45,7 @@ const STEP_TRANSITION_CLASS = "animate-in fade-in-0 slide-in-from-right-2 durati
 export function DonationForm({ shelters }: { shelters: Shelter[] }) {
   const t = useTranslations("form");
   const tValidation = useTranslations("validation");
+  const tMetadata = useTranslations("metadata");
   const step = useDonationFormStore((state) => state.step);
   const goNext = useDonationFormStore((state) => state.goNext);
   const goBack = useDonationFormStore((state) => state.goBack);
@@ -88,6 +89,16 @@ export function DonationForm({ shelters }: { shelters: Shelter[] }) {
       ?.querySelector<HTMLElement>('[aria-invalid="true"]')
       ?.focus();
   }
+
+  // The wizard is one route with Zustand step state rather than one URL per
+  // step, so `generateMetadata` can't see the current step — title/description
+  // are kept in sync with it client-side instead.
+  useEffect(() => {
+    document.title = tMetadata(`donationSteps.${step}.title`);
+    document
+      .querySelector('meta[name="description"]')
+      ?.setAttribute("content", tMetadata(`donationSteps.${step}.description`));
+  }, [step, tMetadata]);
 
   // Move focus to the new step's heading on every step change so keyboard
   // and screen-reader users get a clear signal the view advanced, without

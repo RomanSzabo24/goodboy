@@ -5,7 +5,25 @@
     "contactTitle": "Contact — GoodBoy Foundation",
     "contactDescription": "Contact details for the GoodBoy Foundation.",
     "aboutTitle": "About — GoodBoy Foundation",
-    "aboutDescription": "The GoodBoy Foundation's mission and results so far."
+    "aboutDescription": "The GoodBoy Foundation's mission and results so far.",
+    "donationSteps": {
+      "shelter": {
+        "title": "Choose how to help — GoodBoy Foundation",
+        "description": "Donate to the whole foundation or pick a specific Slovak dog shelter and choose your amount."
+      },
+      "details": {
+        "title": "Your details — GoodBoy Foundation",
+        "description": "Enter your contact details to complete your donation to the GoodBoy Foundation."
+      },
+      "confirm": {
+        "title": "Review & confirm — GoodBoy Foundation",
+        "description": "Review your donation details before confirming your contribution."
+      },
+      "success": {
+        "title": "Thank you! — GoodBoy Foundation",
+        "description": "Your donation was successful. Thank you for supporting Slovak dog shelters."
+      }
+    }
   },
   "nav": {
     "about": "About",

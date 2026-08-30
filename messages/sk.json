@@ -5,7 +5,25 @@
     "contactTitle": "Kontakt — GoodBoy Foundation",
     "contactDescription": "Kontaktné údaje nadácie GoodBoy Foundation.",
     "aboutTitle": "O projekte — GoodBoy Foundation",
-    "aboutDescription": "Poslanie a doterajšie výsledky nadácie GoodBoy Foundation."
+    "aboutDescription": "Poslanie a doterajšie výsledky nadácie GoodBoy Foundation.",
+    "donationSteps": {
+      "shelter": {
+        "title": "Vyberte spôsob pomoci — GoodBoy Foundation",
+        "description": "Prispejte celej nadácii alebo vyberte konkrétny slovenský útulok a zvoľte sumu príspevku."
+      },
+      "details": {
+        "title": "Vaše údaje — GoodBoy Foundation",
+        "description": "Zadajte svoje kontaktné údaje a dokončite príspevok nadácii GoodBoy Foundation."
+      },
+      "confirm": {
+        "title": "Potvrdenie príspevku — GoodBoy Foundation",
+        "description": "Skontrolujte si údaje o príspevku pred jeho potvrdením."
+      },
+      "success": {
+        "title": "Ďakujeme! — GoodBoy Foundation",
+        "description": "Váš príspevok bol úspešne odoslaný. Ďakujeme, že podporujete slovenské útulky."
+      }
+    }
   },
   "nav": {
     "about": "O projekte",
