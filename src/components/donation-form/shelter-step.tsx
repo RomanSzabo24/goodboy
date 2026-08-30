@@ -61,14 +61,14 @@ export function ShelterStep({ form, shelters, className }: ShelterStepProps) {
           >
             <FieldLabel
               htmlFor="help-type-shelter"
-              className="flex-1 justify-center rounded-lg border-0 px-2 py-4 text-center text-sm transition-colors duration-200 has-data-checked:border-0 has-data-checked:bg-primary has-data-checked:text-primary-foreground has-not-data-checked:hover:bg-muted"
+              className="flex-1 justify-center rounded-lg border-0 px-2 py-4 text-center text-sm transition-colors duration-200 has-data-checked:border-0 has-data-checked:bg-primary has-data-checked:text-primary-foreground not-has-data-checked:hover:bg-muted"
             >
               <RadioGroupItem value="GIFT_SHELTER" id="help-type-shelter" className="sr-only" />
               {t("shelter")}
             </FieldLabel>
             <FieldLabel
               htmlFor="help-type-foundation"
-              className="flex-1 justify-center rounded-lg border-0 px-2 py-4 text-center text-sm transition-colors duration-200 has-data-checked:border-0 has-data-checked:bg-primary has-data-checked:text-primary-foreground has-not-data-checked:hover:bg-muted"
+              className="flex-1 justify-center rounded-lg border-0 px-2 py-4 text-center text-sm transition-colors duration-200 has-data-checked:border-0 has-data-checked:bg-primary has-data-checked:text-primary-foreground not-has-data-checked:hover:bg-muted"
             >
               <RadioGroupItem value="GIFT_FOUNDATION" id="help-type-foundation" className="sr-only" />
               {t("general")}
