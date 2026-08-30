@@ -69,7 +69,7 @@ export function ConfirmStep({ form, shelters, className }: ConfirmStepProps) {
 
       <FieldSeparator />
 
-      <Field orientation="horizontal" data-invalid={!!form.formState.errors.consent}>
+      <Field data-invalid={!!form.formState.errors.consent}>
         <FieldLabel htmlFor="consent" className="items-start">
           <Controller
             control={form.control}
