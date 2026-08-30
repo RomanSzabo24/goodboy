@@ -9,6 +9,7 @@ import {
   FieldDescription,
   FieldError,
   FieldLabel,
+  FieldLegend,
   FieldSet,
 } from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -76,42 +77,46 @@ export function ShelterStep({ form, shelters, className }: ShelterStepProps) {
           </RadioGroup>
         )}
       />
-dssd
-      <Field data-invalid={!!form.formState.errors.shelterId}>
-        <FieldLabel htmlFor="shelter-id">
-          {t("shelterLabel")}{" "}
-          {helpType === "GIFT_FOUNDATION" && (
-            <span className="font-normal text-muted-foreground">{t("shelterOptional")}</span>
-          )}
-        </FieldLabel>
-        <Controller
-          control={form.control}
-          name="shelterId"
-          render={({ field }) => (
-            <Select
-              value={field.value ? String(field.value) : undefined}
-              onValueChange={(value) => field.onChange(Number(value))}
-            >
-              <SelectTrigger
-                id="shelter-id"
-                className="w-full"
-                aria-invalid={!!form.formState.errors.shelterId}
-                aria-describedby={form.formState.errors.shelterId ? "shelter-id-error" : undefined}
+      <div className="flex flex-col gap-4">
+        <FieldLegend variant="legend" className="mb-0 font-semibold">
+          {t("sectionTitle")}
+        </FieldLegend>
+        <Field data-invalid={!!form.formState.errors.shelterId}>
+          <FieldLabel htmlFor="shelter-id">
+            {t("shelterLabel")}{" "}
+            {helpType === "GIFT_FOUNDATION" && (
+              <span className="font-normal text-muted-foreground">{t("shelterOptional")}</span>
+            )}
+          </FieldLabel>
+          <Controller
+            control={form.control}
+            name="shelterId"
+            render={({ field }) => (
+              <Select
+                value={field.value ? String(field.value) : undefined}
+                onValueChange={(value) => field.onChange(Number(value))}
               >
-                <SelectValue placeholder={t("shelterPlaceholder")} />
-              </SelectTrigger>
-              <SelectContent>
-                {shelters.map((shelter) => (
-                  <SelectItem key={shelter.id} value={String(shelter.id)}>
-                    {shelter.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
-        />
-        <FieldError id="shelter-id-error" errors={[form.formState.errors.shelterId]} />
-      </Field>
+                <SelectTrigger
+                  id="shelter-id"
+                  className="w-full"
+                  aria-invalid={!!form.formState.errors.shelterId}
+                  aria-describedby={form.formState.errors.shelterId ? "shelter-id-error" : undefined}
+                >
+                  <SelectValue placeholder={t("shelterPlaceholder")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {shelters.map((shelter) => (
+                    <SelectItem key={shelter.id} value={String(shelter.id)}>
+                      {shelter.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          />
+          <FieldError id="shelter-id-error" errors={[form.formState.errors.shelterId]} />
+        </Field>
+      </div>
 
       <Field data-invalid={!!form.formState.errors.amount}>
         <FieldLabel htmlFor="amount" className="text-base font-semibold text-foreground">

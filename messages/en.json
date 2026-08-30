@@ -40,6 +40,7 @@
     "legend": "How would you like to help?",
     "general": "Donate to the whole foundation",
     "shelter": "Donate to a specific shelter",
+    "sectionTitle": "About the project",
     "shelterLabel": "Shelter",
     "shelterOptional": "(Optional)",
     "shelterPlaceholder": "Choose a shelter from the list"
