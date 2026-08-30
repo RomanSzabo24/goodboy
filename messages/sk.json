@@ -1,0 +1,85 @@
+{
+  "metadata": {
+    "homeTitle": "GoodBoy Foundation — Podporte slovenské útulky pre psov",
+    "homeDescription": "Prispejte nadácii GoodBoy Foundation alebo konkrétnemu slovenskému útulku a pomôžte zvieratám v núdzi.",
+    "contactTitle": "Kontakt — GoodBoy Foundation",
+    "contactDescription": "Kontaktné údaje nadácie GoodBoy Foundation."
+  },
+  "nav": {
+    "donate": "Prispieť",
+    "contact": "Kontakt",
+    "language": "Jazyk"
+  },
+  "home": {
+    "heading": "GoodBoy Foundation",
+    "subtitle": "Pomôžte nám podporiť slovenské útulky pre psov — prispejte nadácii alebo útulku podľa vlastného výberu."
+  },
+  "results": {
+    "raised": "vyzbierané doteraz",
+    "donors": "darcov"
+  },
+  "form": {
+    "title": "Podporte GoodBoy Foundation",
+    "back": "Späť",
+    "continue": "Pokračovať",
+    "donate": "Prispieť",
+    "submitting": "Odosielanie…",
+    "submitError": "Pri odosielaní vášho príspevku sa niečo pokazilo. Skúste to prosím znova."
+  },
+  "steps": {
+    "helpType": "Typ pomoci",
+    "amount": "Suma",
+    "details": "Vaše údaje",
+    "progressLabel": "Priebeh formulára pre príspevok"
+  },
+  "helpType": {
+    "legend": "Ako by ste chceli pomôcť?",
+    "description": "Podporte GoodBoy Foundation všeobecne, alebo vyberte konkrétny útulok, ktorý dostane váš príspevok.",
+    "general": "Všeobecný príspevok",
+    "shelter": "Konkrétny útulok",
+    "shelterLabel": "Útulok",
+    "shelterPlaceholder": "Vyberte útulok"
+  },
+  "amount": {
+    "description": "Vyberte prednastavenú sumu alebo zadajte vlastnú.",
+    "presetAriaLabel": "Prednastavená suma príspevku",
+    "presetOptionAriaLabel": "{amount} eur",
+    "customLabel": "Vlastná suma (EUR)",
+    "customPlaceholder": "Zadajte sumu"
+  },
+  "personalDetails": {
+    "yourDetails": "Vaše údaje",
+    "donorNumber": "Darca {number}",
+    "removeDonorAriaLabel": "Odstrániť darcu {number}",
+    "nameLabel": "Meno (nepovinné)",
+    "surnameLabel": "Priezvisko",
+    "emailLabel": "E-mail",
+    "phoneLabel": "Telefón",
+    "consentLabel": "Súhlasím so spracovaním mojich osobných údajov nadáciou GoodBoy Foundation.",
+    "addDonor": "Pridať ďalšieho darcu",
+    "countryCodeAriaLabel": "Predvoľba krajiny",
+    "phonePlaceholder": "900 000 000",
+    "countrySk": "Slovensko",
+    "countryCz": "Česko"
+  },
+  "success": {
+    "heading": "Ďakujeme za váš príspevok!",
+    "donateAgain": "Prispieť znova"
+  },
+  "contact": {
+    "title": "Kontaktujte nás",
+    "intro": "Máte otázku ohľadom prispievania alebo spolupráce s útulkom? Ozvite sa tímu GoodBoy Foundation.",
+    "addressLine": "Búdková 1, 811 04 Bratislava, Slovensko"
+  },
+  "validation": {
+    "phoneInvalid": "Zadajte platné slovenské (+421) alebo české (+420) telefónne číslo",
+    "nameLength": "Meno musí mať 2 až 20 znakov",
+    "surnameMin": "Priezvisko musí mať aspoň 2 znaky",
+    "surnameMax": "Priezvisko môže mať najviac 30 znakov",
+    "emailInvalid": "Zadajte platnú e-mailovú adresu",
+    "consentRequired": "Musíte súhlasiť so spracovaním osobných údajov",
+    "amountRequired": "Zadajte sumu príspevku",
+    "amountPositive": "Suma musí byť väčšia ako 0",
+    "shelterRequired": "Vyberte prosím útulok"
+  }
+}

@@ -4,6 +4,7 @@ import { test, expect } from "@playwright/test";
 // contribute POST writes into the assignment's shared totals — always stub it.
 const CONTRIBUTE_URL = "**/api/v1/shelters/contribute";
 
+// Default locale is Slovak (sk) with no URL prefix — see src/i18n/routing.ts.
 test("happy path: general donation, preset amount, submit succeeds", async ({ page }) => {
   await page.route(CONTRIBUTE_URL, async (route) => {
     await route.fulfill({
@@ -18,21 +19,21 @@ test("happy path: general donation, preset amount, submit succeeds", async ({ pa
   await page.goto("/");
 
   // Step 1: help type — General donation is the default, just continue.
-  await page.getByRole("button", { name: "Continue" }).click();
+  await page.getByRole("button", { name: "Pokračovať" }).click();
 
   // Step 2: amount — pick a preset.
-  await page.getByRole("radio", { name: "10 euros" }).click();
-  await page.getByRole("button", { name: "Continue" }).click();
+  await page.getByRole("radio", { name: "10 eur" }).click();
+  await page.getByRole("button", { name: "Pokračovať" }).click();
 
   // Step 3: personal details.
-  await page.getByLabel("Surname").fill("Testovaci");
+  await page.getByLabel("Priezvisko").fill("Testovaci");
   await page.getByLabel("E-mail").fill("donor@example.com");
-  await page.getByLabel("Phone").fill("900 123 456");
-  await page.getByRole("checkbox", { name: /consent/i }).check();
+  await page.getByLabel("Telefón").fill("900 123 456");
+  await page.getByRole("checkbox", { name: /súhlasím/i }).check();
 
-  await page.getByRole("button", { name: "Donate" }).click();
+  await page.getByRole("button", { name: "Prispieť" }).click();
 
-  await expect(page.getByText("Thank you for your donation!")).toBeVisible();
+  await expect(page.getByText("Ďakujeme za váš príspevok!")).toBeVisible();
 });
 
 test("submission surfaces an ERROR message from the API instead of succeeding", async ({
@@ -49,16 +50,16 @@ test("submission surfaces an ERROR message from the API instead of succeeding", 
   });
 
   await page.goto("/");
-  await page.getByRole("button", { name: "Continue" }).click();
-  await page.getByRole("radio", { name: "10 euros" }).click();
-  await page.getByRole("button", { name: "Continue" }).click();
+  await page.getByRole("button", { name: "Pokračovať" }).click();
+  await page.getByRole("radio", { name: "10 eur" }).click();
+  await page.getByRole("button", { name: "Pokračovať" }).click();
 
-  await page.getByLabel("Surname").fill("Testovaci");
+  await page.getByLabel("Priezvisko").fill("Testovaci");
   await page.getByLabel("E-mail").fill("donor@example.com");
-  await page.getByLabel("Phone").fill("900 123 456");
-  await page.getByRole("checkbox", { name: /consent/i }).check();
-  await page.getByRole("button", { name: "Donate" }).click();
+  await page.getByLabel("Telefón").fill("900 123 456");
+  await page.getByRole("checkbox", { name: /súhlasím/i }).check();
+  await page.getByRole("button", { name: "Prispieť" }).click();
 
   await expect(page.getByText("Something went wrong")).toBeVisible();
-  await expect(page.getByText("Thank you for your donation!")).not.toBeVisible();
+  await expect(page.getByText("Ďakujeme za váš príspevok!")).not.toBeVisible();
 });

@@ -1,18 +1,15 @@
 "use client";
 
 import { HeartHandshake, Users } from "lucide-react";
+import { useFormatter, useTranslations } from "next-intl";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { useSheltersResults } from "@/hooks/use-shelters";
 import type { ResultsResponse } from "@/services/shelters";
 
-const currencyFormatter = new Intl.NumberFormat("sk-SK", {
-  style: "currency",
-  currency: "EUR",
-  maximumFractionDigits: 0,
-});
-
 export function ResultsSummary({ initialData }: { initialData: ResultsResponse }) {
+  const t = useTranslations("results");
+  const format = useFormatter();
   const { data } = useSheltersResults(undefined);
   const results = data ?? initialData;
 
@@ -22,14 +19,18 @@ export function ResultsSummary({ initialData }: { initialData: ResultsResponse }
         <div className="flex flex-col items-center gap-1">
           <HeartHandshake className="size-5 text-primary" aria-hidden="true" />
           <span className="text-xl font-semibold">
-            {currencyFormatter.format(results.contribution ?? 0)}
+            {format.number(results.contribution ?? 0, {
+              style: "currency",
+              currency: "EUR",
+              maximumFractionDigits: 0,
+            })}
           </span>
-          <span className="text-xs text-muted-foreground">raised so far</span>
+          <span className="text-xs text-muted-foreground">{t("raised")}</span>
         </div>
         <div className="flex flex-col items-center gap-1">
           <Users className="size-5 text-primary" aria-hidden="true" />
           <span className="text-xl font-semibold">{results.contributors}</span>
-          <span className="text-xs text-muted-foreground">donors</span>
+          <span className="text-xs text-muted-foreground">{t("donors")}</span>
         </div>
       </CardContent>
     </Card>

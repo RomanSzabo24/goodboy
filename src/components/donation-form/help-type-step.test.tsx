@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { NextIntlClientProvider } from "next-intl";
 import { describe, expect, it } from "vitest";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,6 +12,7 @@ import {
   type DonationFormInput,
   type DonationFormValues,
 } from "@/lib/validations/donation";
+import messages from "../../../messages/en.json";
 
 const shelters = [
   { id: 1, name: "Útulok Bratislava" },
@@ -23,7 +25,11 @@ function TestHarness() {
     defaultValues: donationFormDefaultValues,
   });
 
-  return <HelpTypeStep form={form} shelters={shelters} />;
+  return (
+    <NextIntlClientProvider locale="en" messages={messages}>
+      <HelpTypeStep form={form} shelters={shelters} />
+    </NextIntlClientProvider>
+  );
 }
 
 describe("HelpTypeStep", () => {

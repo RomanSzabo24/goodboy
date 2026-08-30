@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { useForm, type Path } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -18,8 +19,8 @@ import {
   useDonationFormStore,
 } from "@/stores/donation-form-store";
 import {
+  createDonationFormSchema,
   donationFormDefaultValues,
-  donationFormSchema,
   type DonationFormInput,
   type DonationFormValues,
 } from "@/lib/validations/donation";
@@ -37,11 +38,29 @@ const STEP_FIELDS: Record<string, Path<DonationFormInput>[]> = {
 };
 
 export function DonationForm({ shelters }: { shelters: Shelter[] }) {
+  const t = useTranslations("form");
+  const tValidation = useTranslations("validation");
   const step = useDonationFormStore((state) => state.step);
   const goNext = useDonationFormStore((state) => state.goNext);
   const goBack = useDonationFormStore((state) => state.goBack);
   const reset = useDonationFormStore((state) => state.reset);
   const contribute = useContribute();
+
+  const donationFormSchema = useMemo(
+    () =>
+      createDonationFormSchema({
+        phoneInvalid: tValidation("phoneInvalid"),
+        nameLength: tValidation("nameLength"),
+        surnameMin: tValidation("surnameMin"),
+        surnameMax: tValidation("surnameMax"),
+        emailInvalid: tValidation("emailInvalid"),
+        consentRequired: tValidation("consentRequired"),
+        amountRequired: tValidation("amountRequired"),
+        amountPositive: tValidation("amountPositive"),
+        shelterRequired: tValidation("shelterRequired"),
+      }),
+    [tValidation],
+  );
 
   const form = useForm<DonationFormInput, unknown, DonationFormValues>({
     resolver: zodResolver(donationFormSchema),
@@ -71,7 +90,7 @@ export function DonationForm({ shelters }: { shelters: Shelter[] }) {
       setSuccessMessages(response.messages);
       goNext();
     } catch {
-      toast.error("Something went wrong while submitting your donation. Please try again.");
+      toast.error(t("submitError"));
     }
   }
 
@@ -84,7 +103,7 @@ export function DonationForm({ shelters }: { shelters: Shelter[] }) {
   return (
     <Card className="w-full max-w-xl">
       <CardHeader>
-        <CardTitle>Support the GoodBoy Foundation</CardTitle>
+        <CardTitle>{t("title")}</CardTitle>
         {step !== "success" && <StepIndicator currentIndex={stepIndex} />}
       </CardHeader>
       <CardContent>
@@ -98,7 +117,7 @@ export function DonationForm({ shelters }: { shelters: Shelter[] }) {
       {step !== "success" && (
         <CardFooter className="justify-between">
           <Button type="button" variant="ghost" onClick={goBack} disabled={stepIndex === 0}>
-            Back
+            {t("back")}
           </Button>
           {step === "details" ? (
             <Button
@@ -106,11 +125,11 @@ export function DonationForm({ shelters }: { shelters: Shelter[] }) {
               disabled={contribute.isPending}
               onClick={form.handleSubmit(handleSubmit)}
             >
-              {contribute.isPending ? "Submitting…" : "Donate"}
+              {contribute.isPending ? t("submitting") : t("donate")}
             </Button>
           ) : (
             <Button type="button" onClick={handleNext}>
-              Continue
+              {t("continue")}
             </Button>
           )}
         </CardFooter>

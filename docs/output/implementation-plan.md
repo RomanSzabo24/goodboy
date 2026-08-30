@@ -7,7 +7,7 @@
 >
 > **Commit convention:** small, working commits per checkpoint (Conventional Commits style: `feat:`, `fix:`, `chore:`, `test:`, `docs:`). Only commit at a 📍 marker once the preceding tasks build/lint clean — never commit a broken intermediate state.
 
-**State as of 2026-08-29:** Phases 0–4 and most of 5–6 are functionally implemented and verified (`typecheck`, `lint`, `test`, `test:e2e`, `build` all green; the full donation flow and Contact page were also exercised manually in a browser). **Phase 1.5 (Figma assets/tokens/visual parity) was skipped entirely** — the UI was built from `CLAUDE.md`'s business rules and shadcn/Tailwind defaults, not against the actual Figma frames, so it is not yet visually verified 1:1 against the design file. The whole UI and all validation/toast copy is in **English**, not Slovak, and several accessibility/polish items from Phases 7–10 are outstanding. See the per-phase notes below for exact deviations. Nothing has been committed yet — awaiting manual review/commit by the repo owner.
+**State as of 2026-08-29:** Phases 0–1 are committed (`chore: install core dependencies and configure tooling`, `feat: base app structure, providers and layout`). Phases 2–4 and most of 5–6 were implemented in the same working session but landed in that second commit too — this document's checklist state didn't get updated at the time, which is corrected now. Phases 0–4 and most of 5–6 are functionally implemented and verified (`typecheck`, `lint`, `test`, `test:e2e`, `build` all green; the full donation flow and Contact page were also exercised manually in a browser). **Phase 1.5 (Figma assets/tokens/visual parity) was skipped entirely** — the UI was built from `CLAUDE.md`'s business rules and shadcn/Tailwind defaults, not against the actual Figma frames, so it is not yet visually verified 1:1 against the design file. **The language open question is now resolved:** the app uses `next-intl` with Slovak as the default locale and English as a switchable secondary locale (routed via a `[locale]` segment, see Phase 9). All UI copy and Zod validation messages are localized through message catalogs; several accessibility/polish items from Phases 7–10 remain outstanding. See the per-phase notes below for exact deviations. Nothing has been committed yet beyond the two commits above — awaiting manual review/commit by the repo owner.
 
 ---
 
@@ -16,16 +16,16 @@
 | # | Phase | Status |
 |---|-------|--------|
 | 0 | Dependency & tooling setup | ✅ 6 / 6 |
-| 1 | Base structure and providers | 🟡 3 / 5 |
+| 1 | Base structure and providers | 🟡 4 / 5 |
 | 1.5 | Figma: assets, tokens and components | ⬜ 0 / 9 (skipped) |
 | 2 | Data layer (services + Zod + Query hooks) | 🟡 3 / 7 (restructured — see notes) |
-| 3 | Form validation schemas | 🟡 6 / 7 |
+| 3 | Form validation schemas | ✅ 7 / 7 |
 | 4 | Form state (Zustand + RHF) | ✅ 4 / 4 (with noted deviations) |
 | 5 | UI — form steps | 🟡 7 / 10 |
 | 6 | Submission, results, Contact page | 🟡 6 / 7 |
 | 7 | Accessibility and responsiveness | 🟡 1 / 6 |
 | 8 | Tests | 🟡 4 / 6 |
-| 9 | Bonuses ⭐ | 🟡 1 / 6 (+1 partial) |
+| 9 | Bonuses ⭐ | 🟡 2 / 6 (+1 partial) |
 | 10 | Final check and handover | 🟡 3 / 6 |
 
 ---
@@ -49,7 +49,7 @@
 
 - [x] Create the target directory structure per the `project-structure` skill (`components/`, `services/`, `hooks/`, `stores/`, `lib/validations/`) — **deviation:** no `types/` folder was created; every type is derived via `z.infer`/`z.input`/`z.output` from the Zod schemas or from service return types, so a separate types directory had nothing to hold
 - [x] `src/app/providers.tsx` — `'use client'` wrapper with `QueryClientProvider` (`QueryClient` in `useState`, `staleTime: 60_000`) — also added `next-themes`' `ThemeProvider` (needed by the generated `sonner.tsx`'s `useTheme()` call) — **deviation:** React Query Devtools were **not** wired in, even though the package is installed
-- [x] Wired `Providers` + `Toaster` into `src/app/layout.tsx`, added a `SiteHeader` with Home/Contact nav — **deviation:** `lang="en"` was kept, not switched to `lang="sk"` as planned; all UI copy is English (see the Phase 3/9 notes — this is the single biggest content deviation from the plan and should be a deliberate decision, not an oversight)
+- [x] Wired `Providers` + `Toaster` into `src/app/[locale]/layout.tsx`, added a `SiteHeader` with Home/Contact nav — **resolved:** `lang` is now set dynamically per-locale (`sk`/`en`) via `next-intl`; see Phase 9's i18n bonus for the full localization setup. The app moved under a `src/app/[locale]/` segment with `src/proxy.ts` (Next.js 16 renamed `middleware.ts` → `proxy.ts`) handling locale routing.
 
 > 📍 **Commit:** `feat: base app structure, providers and layout` 
 
@@ -108,7 +108,7 @@ Base URL: `https://frontend-assignment-api.goodrequest.dev`, endpoints per [open
 - [x] Personal details: `name` optional 2–20 chars (empty string → `undefined` via `.refine()` + `.transform()`, tested explicitly for the `""` edge case), `surname` required 2–30, `email` required and valid (`z.email()`, Zod v4 top-level form)
 - [x] `phone`: SK `+421` / CZ `+420` format — **deviation:** implemented as a **single combined schema** (`skCzPhoneSchema`, one regex over the full `"+421 900 000 000"` string) rather than "separate schema + normalization before submit." The `PhoneInput` component itself splits/recombines prefix + national number for display, so the country-flag UI and the single-string schema stay in sync by construction; no separate normalization step was needed.
 - [x] `consent`: **deviation:** `z.boolean().refine(v => v === true)` instead of `z.literal(true)`. Reason: `z.literal(true)` makes the *input* type of the field also `true`, which makes it impossible to type a legitimate unchecked (`false`) default value for the checkbox without an unsafe cast. `z.boolean().refine(...)` keeps `false` as a valid default while still failing validation until the box is checked.
-- [ ] Slovak error messages for all rules — **not done.** All Zod `error` messages (and all UI copy) are in English. This needs an explicit decision: either localize now, or treat it as scope for the Phase 9 i18n bonus.
+- [x] Slovak error messages for all rules — **done via the Phase 9 i18n bonus.** `donation.ts` exports `createDonationFormSchema(messages: ValidationMessages)` / `createContributorSchema` / `createPhoneSchema` factories instead of static schemas; `DonationForm` builds the schema with `useTranslations("validation")` strings memoized via `useMemo`. The plain `donationFormSchema`/`contributorSchema`/`skCzPhoneSchema` exports still exist (built from `defaultValidationMessages`, English) purely so `donation.test.ts` and the `HelpTypeStep` test harness don't need a translation context to exercise validation logic — they're not used by the running app.
 
 > 📍 **Commit:** `feat: form validation schemas (Zod)` (not yet made)
 
@@ -204,7 +204,16 @@ Base URL: `https://frontend-assignment-api.goodrequest.dev`, endpoints per [open
 
 > Bonuses are independent of each other — implement any subset, in any order. 📍 Commit each one separately right after it's done, so the base submission stays clean even if a bonus is dropped later.
 
-- [ ] ⭐ String localization (i18next / next-intl) — **not done**, and notably the app isn't even hardcoded in Slovak (see Phase 1/3 notes) — 📍 `feat: i18n string localization`
+- [x] ⭐ String localization (i18next / next-intl) — **done with `next-intl`**, Slovak default + English secondary locale via a `[locale]` App Router segment:
+  - `src/i18n/routing.ts` (`locales: ["sk", "en"]`, `defaultLocale: "sk"`, `localeDetection: false` — always defaults to Slovak instead of negotiating the browser's `Accept-Language`, since the target audience is Slovak/Czech; language only changes via the in-app switcher), `src/i18n/navigation.ts` (localized `Link`/`usePathname`/`useRouter`), `src/i18n/request.ts` (loads `messages/{locale}.json`)
+  - `src/proxy.ts` — locale-routing proxy (Next.js 16 renamed the `middleware.ts` convention to `proxy.ts`; see the [proxy file convention docs](https://nextjs.org/docs/app/api-reference/file-conventions/proxy))
+  - `src/app/[locale]/{layout,page,contact/page}.tsx` — moved under the locale segment; `generateStaticParams`/`generateMetadata`/`setRequestLocale` wired per next-intl's App Router guide
+  - `messages/sk.json` + `messages/en.json` — every UI string (nav, form steps, field labels, aria-labels, toasts, success screen, results widget, contact page, metadata)
+  - `src/components/layout/language-switcher.tsx` — a `Select`-based switcher in `SiteHeader` that swaps locale while preserving the current path and in-progress form step
+  - `src/lib/validations/donation.ts` — refactored from static schemas to `createDonationFormSchema(messages)`/`createContributorSchema`/`createPhoneSchema` factories so Zod error messages are localized too; `DonationForm` builds the schema via `useTranslations("validation")` + `useMemo`
+  - `src/components/results/results-summary.tsx` — currency formatting now uses next-intl's `useFormatter()` (locale-aware) instead of a hardcoded `sk-SK` `Intl.NumberFormat`
+  - Updated `e2e/donation-flow.spec.ts` (Slovak copy, since `/` now defaults to `sk`) and `help-type-step.test.tsx` (wrapped in `NextIntlClientProvider` with the English catalog) accordingly
+  - 📍 `feat: i18n string localization (next-intl, sk/en)` (not yet committed)
 - [ ] ⭐ SEO — 🟡 **partial:** static `export const metadata` (title + description) added for `/` and `/contact` via Next's Metadata API; **no** `generateMetadata` per form step (the steps are client-side state within one route, not separate routes, so per-step server metadata isn't straightforward without restructuring), and **no `og:image`** — 📍 `feat: SEO metadata and og:image`
 - [x] ⭐ Multiple donors (`contributors[]`) via `useFieldArray` — **done**, add/remove donor rows in `PersonalDetailsStep` — 📍 `feat: multiple donors via useFieldArray` (not yet committed)
 - [ ] ⭐ Search within the shelter list (`?search=` parameter with debounce) — **not done** (the `search` param is plumbed through `getShelters`/`useShelters` but nothing in the UI calls it) — 📍 `feat: debounced shelter search`
@@ -229,5 +238,5 @@ Base URL: `https://frontend-assignment-api.goodrequest.dev`, endpoints per [open
 - [x] How to map the optional first name onto the required `firstName` in the API payload — **resolved:** `firstName: name ?? ""` in `toContributeBody` (`src/services/shelters.ts`)
 - [ ] Exact preset amount values and copy — **still open/placeholder.** Shipped with 5 / 10 / 25 / 50 € as reasonable defaults, not taken from Figma.
 - [x] Phone format sent to the API (`+421 900 000 000` vs. the `0900 000 000` example in the spec) — **resolved:** the app sends the full international format with country code, e.g. `"+421 900 123 456"` (matches the `skCzPhoneSchema` regex the form validates against), not the local `0900 000 000` style from the OpenAPI example.
-- [ ] **New open question:** should the app's language be Slovak (matching the target audience and, presumably, the Figma copy) or stay in English? This affects Phase 3's "Slovak error messages" item, `lang="sk"` vs `"en"` in the layout, and whether Phase 9's i18n bonus is really optional or effectively required to get the language right.
+- [x] Should the app's language be Slovak or English? — **resolved:** neither exclusively — the app is now localized with `next-intl` (Slovak default, English switchable), which resolves Phase 3's "Slovak error messages" item and doubles as the Phase 9 i18n bonus. See Phase 9 for the full implementation.
 - [ ] **New open question:** should API responses be runtime-validated with Zod (`safeParse`), as both this plan and the `api-integration`/`zod-validation` skills recommend, or is compile-time typing considered sufficient for these 3 read/write endpoints?

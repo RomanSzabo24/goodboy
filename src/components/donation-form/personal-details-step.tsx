@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Controller, useFieldArray } from "react-hook-form";
 import { Plus, Trash2 } from "lucide-react";
 
@@ -23,6 +24,7 @@ type PersonalDetailsStepProps = {
 };
 
 export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
+  const t = useTranslations("personalDetails");
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "contributors",
@@ -38,14 +40,14 @@ export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
             <FieldSet>
               <div className="flex items-center justify-between">
                 <FieldLegend variant="label">
-                  {fields.length > 1 ? `Donor ${index + 1}` : "Your details"}
+                  {fields.length > 1 ? t("donorNumber", { number: index + 1 }) : t("yourDetails")}
                 </FieldLegend>
                 {fields.length > 1 && (
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon-sm"
-                    aria-label={`Remove donor ${index + 1}`}
+                    aria-label={t("removeDonorAriaLabel", { number: index + 1 })}
                     onClick={() => remove(index)}
                   >
                     <Trash2 />
@@ -55,7 +57,7 @@ export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field data-invalid={!!errors?.name}>
-                  <FieldLabel htmlFor={`contributors.${index}.name`}>Name (optional)</FieldLabel>
+                  <FieldLabel htmlFor={`contributors.${index}.name`}>{t("nameLabel")}</FieldLabel>
                   <Input
                     id={`contributors.${index}.name`}
                     autoComplete="given-name"
@@ -66,7 +68,9 @@ export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
                 </Field>
 
                 <Field data-invalid={!!errors?.surname}>
-                  <FieldLabel htmlFor={`contributors.${index}.surname`}>Surname</FieldLabel>
+                  <FieldLabel htmlFor={`contributors.${index}.surname`}>
+                    {t("surnameLabel")}
+                  </FieldLabel>
                   <Input
                     id={`contributors.${index}.surname`}
                     autoComplete="family-name"
@@ -78,7 +82,7 @@ export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
               </div>
 
               <Field data-invalid={!!errors?.email}>
-                <FieldLabel htmlFor={`contributors.${index}.email`}>E-mail</FieldLabel>
+                <FieldLabel htmlFor={`contributors.${index}.email`}>{t("emailLabel")}</FieldLabel>
                 <Input
                   id={`contributors.${index}.email`}
                   type="email"
@@ -90,7 +94,7 @@ export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
               </Field>
 
               <Field data-invalid={!!errors?.phone}>
-                <FieldLabel htmlFor={`contributors.${index}.phone`}>Phone</FieldLabel>
+                <FieldLabel htmlFor={`contributors.${index}.phone`}>{t("phoneLabel")}</FieldLabel>
                 <Controller
                   control={form.control}
                   name={`contributors.${index}.phone`}
@@ -121,7 +125,7 @@ export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
                       />
                     )}
                   />
-                  <span>I consent to processing of my personal data by the GoodBoy Foundation.</span>
+                  <span>{t("consentLabel")}</span>
                 </FieldLabel>
                 <FieldError errors={[errors?.consent]} />
               </Field>
@@ -138,7 +142,7 @@ export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
           append({ name: "", surname: "", email: "", phone: "", consent: false })
         }
       >
-        <Plus /> Add another donor
+        <Plus /> {t("addDonor")}
       </Button>
     </FieldGroup>
   );

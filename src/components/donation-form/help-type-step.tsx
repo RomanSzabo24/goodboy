@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Controller } from "react-hook-form";
 
 import {
@@ -27,15 +28,13 @@ type HelpTypeStepProps = {
 };
 
 export function HelpTypeStep({ form, shelters }: HelpTypeStepProps) {
+  const t = useTranslations("helpType");
   const helpType = form.watch("helpType");
 
   return (
     <FieldSet>
-      <FieldLegend>How would you like to help?</FieldLegend>
-      <FieldDescription>
-        Support the GoodBoy Foundation in general, or choose a specific shelter to receive
-        your donation.
-      </FieldDescription>
+      <FieldLegend>{t("legend")}</FieldLegend>
+      <FieldDescription>{t("description")}</FieldDescription>
       <Controller
         control={form.control}
         name="helpType"
@@ -54,13 +53,13 @@ export function HelpTypeStep({ form, shelters }: HelpTypeStepProps) {
             <FieldLabel htmlFor="help-type-foundation">
               <Field orientation="horizontal">
                 <RadioGroupItem value="GIFT_FOUNDATION" id="help-type-foundation" />
-                <span>General donation</span>
+                <span>{t("general")}</span>
               </Field>
             </FieldLabel>
             <FieldLabel htmlFor="help-type-shelter">
               <Field orientation="horizontal">
                 <RadioGroupItem value="GIFT_SHELTER" id="help-type-shelter" />
-                <span>Specific shelter</span>
+                <span>{t("shelter")}</span>
               </Field>
             </FieldLabel>
           </RadioGroup>
@@ -69,7 +68,7 @@ export function HelpTypeStep({ form, shelters }: HelpTypeStepProps) {
 
       {helpType === "GIFT_SHELTER" && (
         <Field data-invalid={!!form.formState.errors.shelterId}>
-          <FieldLabel htmlFor="shelter-id">Shelter</FieldLabel>
+          <FieldLabel htmlFor="shelter-id">{t("shelterLabel")}</FieldLabel>
           <Controller
             control={form.control}
             name="shelterId"
@@ -83,7 +82,7 @@ export function HelpTypeStep({ form, shelters }: HelpTypeStepProps) {
                   className="w-full"
                   aria-invalid={!!form.formState.errors.shelterId}
                 >
-                  <SelectValue placeholder="Choose a shelter" />
+                  <SelectValue placeholder={t("shelterPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
                   {shelters.map((shelter) => (

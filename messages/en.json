@@ -1,0 +1,85 @@
+{
+  "metadata": {
+    "homeTitle": "GoodBoy Foundation — Support Slovak dog shelters",
+    "homeDescription": "Donate to the GoodBoy Foundation or a specific Slovak dog shelter and help support animals in need.",
+    "contactTitle": "Contact — GoodBoy Foundation",
+    "contactDescription": "Contact details for the GoodBoy Foundation."
+  },
+  "nav": {
+    "donate": "Donate",
+    "contact": "Contact",
+    "language": "Language"
+  },
+  "home": {
+    "heading": "GoodBoy Foundation",
+    "subtitle": "Help us support Slovak dog shelters — donate to the foundation or to a shelter of your choice."
+  },
+  "results": {
+    "raised": "raised so far",
+    "donors": "donors"
+  },
+  "form": {
+    "title": "Support the GoodBoy Foundation",
+    "back": "Back",
+    "continue": "Continue",
+    "donate": "Donate",
+    "submitting": "Submitting…",
+    "submitError": "Something went wrong while submitting your donation. Please try again."
+  },
+  "steps": {
+    "helpType": "Help type",
+    "amount": "Amount",
+    "details": "Your details",
+    "progressLabel": "Donation form progress"
+  },
+  "helpType": {
+    "legend": "How would you like to help?",
+    "description": "Support the GoodBoy Foundation in general, or choose a specific shelter to receive your donation.",
+    "general": "General donation",
+    "shelter": "Specific shelter",
+    "shelterLabel": "Shelter",
+    "shelterPlaceholder": "Choose a shelter"
+  },
+  "amount": {
+    "description": "Choose a preset amount or enter your own.",
+    "presetAriaLabel": "Preset donation amount",
+    "presetOptionAriaLabel": "{amount} euros",
+    "customLabel": "Custom amount (EUR)",
+    "customPlaceholder": "Enter amount"
+  },
+  "personalDetails": {
+    "yourDetails": "Your details",
+    "donorNumber": "Donor {number}",
+    "removeDonorAriaLabel": "Remove donor {number}",
+    "nameLabel": "Name (optional)",
+    "surnameLabel": "Surname",
+    "emailLabel": "E-mail",
+    "phoneLabel": "Phone",
+    "consentLabel": "I consent to processing of my personal data by the GoodBoy Foundation.",
+    "addDonor": "Add another donor",
+    "countryCodeAriaLabel": "Country code",
+    "phonePlaceholder": "900 000 000",
+    "countrySk": "Slovakia",
+    "countryCz": "Czechia"
+  },
+  "success": {
+    "heading": "Thank you for your donation!",
+    "donateAgain": "Make another donation"
+  },
+  "contact": {
+    "title": "Contact us",
+    "intro": "Have a question about donating or partnering with a shelter? Reach out to the GoodBoy Foundation team.",
+    "addressLine": "Búdková 1, 811 04 Bratislava, Slovakia"
+  },
+  "validation": {
+    "phoneInvalid": "Enter a valid SK (+421) or CZ (+420) phone number",
+    "nameLength": "Name must be 2-20 characters",
+    "surnameMin": "Surname must be at least 2 characters",
+    "surnameMax": "Surname must be at most 30 characters",
+    "emailInvalid": "Enter a valid e-mail address",
+    "consentRequired": "You must consent to personal data processing",
+    "amountRequired": "Enter a donation amount",
+    "amountPositive": "Amount must be greater than 0",
+    "shelterRequired": "Please choose a shelter"
+  }
+}

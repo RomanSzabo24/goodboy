@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -10,8 +12,8 @@ import {
 } from "@/components/ui/select";
 
 const COUNTRY_CODES = [
-  { code: "+421", flag: "🇸🇰", label: "Slovensko" },
-  { code: "+420", flag: "🇨🇿", label: "Česko" },
+  { code: "+421", flag: "🇸🇰", labelKey: "countrySk" },
+  { code: "+420", flag: "🇨🇿", labelKey: "countryCz" },
 ] as const;
 
 function splitPhone(value: string) {
@@ -29,6 +31,7 @@ type PhoneInputProps = {
 };
 
 export function PhoneInput({ id, value, onChange, onBlur, ...props }: PhoneInputProps) {
+  const t = useTranslations("personalDetails");
   const { prefix, national } = splitPhone(value);
 
   return (
@@ -37,7 +40,7 @@ export function PhoneInput({ id, value, onChange, onBlur, ...props }: PhoneInput
         value={prefix}
         onValueChange={(nextPrefix) => onChange(`${nextPrefix} ${national}`.trim())}
       >
-        <SelectTrigger className="w-[104px] shrink-0" aria-label="Country code">
+        <SelectTrigger className="w-[104px] shrink-0" aria-label={t("countryCodeAriaLabel")}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -45,6 +48,7 @@ export function PhoneInput({ id, value, onChange, onBlur, ...props }: PhoneInput
             <SelectItem key={country.code} value={country.code}>
               <span aria-hidden="true">{country.flag}</span>
               {country.code}
+              <span className="sr-only">{t(country.labelKey)}</span>
             </SelectItem>
           ))}
         </SelectContent>
@@ -54,7 +58,7 @@ export function PhoneInput({ id, value, onChange, onBlur, ...props }: PhoneInput
         type="tel"
         inputMode="tel"
         autoComplete="tel-national"
-        placeholder="900 000 000"
+        placeholder={t("phonePlaceholder")}
         value={national}
         onChange={(event) => onChange(`${prefix} ${event.target.value}`.trim())}
         onBlur={onBlur}

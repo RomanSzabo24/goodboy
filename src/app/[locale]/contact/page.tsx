@@ -1,29 +1,43 @@
 import type { Metadata } from "next";
 import { Mail, MapPin, Phone } from "lucide-react";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export const metadata: Metadata = {
-  title: "Contact — GoodBoy Foundation",
-  description: "Contact details for the GoodBoy Foundation.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "metadata" });
+  return {
+    title: t("contactTitle"),
+    description: t("contactDescription"),
+  };
+}
 
-export default function ContactPage() {
+export default async function ContactPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("contact");
+
   return (
     <main className="flex flex-1 flex-col items-center gap-6 px-4 py-10 sm:py-16">
       <Card className="w-full max-w-xl">
         <CardHeader>
-          <CardTitle className="text-xl">Contact us</CardTitle>
+          <CardTitle className="text-xl">{t("title")}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4 text-sm">
-          <p className="text-muted-foreground">
-            Have a question about donating or partnering with a shelter? Reach out to the
-            GoodBoy Foundation team.
-          </p>
+          <p className="text-muted-foreground">{t("intro")}</p>
           <ul className="flex flex-col gap-3">
             <li className="flex items-center gap-3">
               <MapPin className="size-4 shrink-0 text-primary" aria-hidden="true" />
-              <span>Búdková 1, 811 04 Bratislava, Slovakia</span>
+              <span>{t("addressLine")}</span>
             </li>
             <li className="flex items-center gap-3">
               <Mail className="size-4 shrink-0 text-primary" aria-hidden="true" />

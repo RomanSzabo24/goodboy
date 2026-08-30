@@ -1,11 +1,16 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+
 import { cn } from "@/lib/utils";
 
-const STEP_LABELS = ["Help type", "Amount", "Your details"] as const;
-
 export function StepIndicator({ currentIndex }: { currentIndex: number }) {
+  const t = useTranslations("steps");
+  const stepLabels = [t("helpType"), t("amount"), t("details")];
+
   return (
-    <ol className="flex w-full items-center gap-2" aria-label="Donation form progress">
-      {STEP_LABELS.map((label, index) => {
+    <ol className="flex w-full items-center gap-2" aria-label={t("progressLabel")}>
+      {stepLabels.map((label, index) => {
         const isComplete = index < currentIndex;
         const isCurrent = index === currentIndex;
         return (
@@ -28,7 +33,7 @@ export function StepIndicator({ currentIndex }: { currentIndex: number }) {
             >
               {label}
             </span>
-            {index < STEP_LABELS.length - 1 && (
+            {index < stepLabels.length - 1 && (
               <span aria-hidden="true" className="h-px flex-1 bg-border" />
             )}
           </li>
