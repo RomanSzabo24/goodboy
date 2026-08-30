@@ -22,9 +22,10 @@ import { contributorSchema } from "@/lib/validations/donation";
 
 type PersonalDetailsStepProps = {
   form: DonationFormApi;
+  className?: string;
 };
 
-export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
+export function PersonalDetailsStep({ form, className }: PersonalDetailsStepProps) {
   const t = useTranslations("personalDetails");
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -73,7 +74,7 @@ export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
   }
 
   return (
-    <FieldGroup>
+    <FieldGroup className={className}>
       {fields.map((field, index) => {
         const errors = form.formState.errors.contributors?.[index];
         const title = fields.length > 1 ? t("donorNumber", { number: index + 1 }) : t("yourDetails");
@@ -83,7 +84,7 @@ export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
           return (
             <div key={field.id}>
               {index > 0 && <FieldSeparator className="mb-4" />}
-              <div className="flex items-start justify-between gap-4 rounded-lg border border-border p-4">
+              <div className="flex items-start justify-between gap-4 rounded-lg border border-border p-4 animate-in fade-in-0 slide-in-from-top-1 duration-300">
                 <div className="flex flex-col gap-0.5">
                   <span className="text-sm font-medium text-foreground">{title}</span>
                   <span className="text-sm text-secondary-foreground">
@@ -116,7 +117,7 @@ export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
         return (
           <div key={field.id}>
             {index > 0 && <FieldSeparator className="mb-4" />}
-            <FieldSet>
+            <FieldSet className="animate-in fade-in-0 slide-in-from-top-1 duration-300">
               <div className="flex items-center justify-between">
                 <FieldLegend variant="label">{title}</FieldLegend>
                 {fields.length > 1 && (

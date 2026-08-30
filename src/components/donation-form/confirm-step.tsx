@@ -6,6 +6,7 @@ import { Controller } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldError, FieldLabel, FieldSeparator } from "@/components/ui/field";
 import type { DonationFormApi } from "@/components/donation-form/types";
+import { cn } from "@/lib/utils";
 import type { Shelter } from "@/services/shelters";
 
 type SummaryRowProps = {
@@ -25,16 +26,17 @@ function SummaryRow({ label, value }: SummaryRowProps) {
 type ConfirmStepProps = {
   form: DonationFormApi;
   shelters: Shelter[];
+  className?: string;
 };
 
-export function ConfirmStep({ form, shelters }: ConfirmStepProps) {
+export function ConfirmStep({ form, shelters, className }: ConfirmStepProps) {
   const t = useTranslations("confirm");
   const tPersonal = useTranslations("personalDetails");
   const values = form.getValues();
   const shelterName = shelters.find((shelter) => shelter.id === values.shelterId)?.name;
 
   return (
-    <div className="flex w-full flex-col gap-4">
+    <div className={cn("flex w-full flex-col gap-4", className)}>
       <h3 className="text-base font-semibold text-foreground">{t("summaryTitle")}</h3>
 
       <SummaryRow

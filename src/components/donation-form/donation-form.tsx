@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useForm, type Path } from "react-hook-form";
 import { toast } from "sonner";
@@ -38,6 +38,11 @@ const STEP_FIELDS: Record<string, Path<DonationFormInput>[]> = {
   details: ["contributors"],
   confirm: ["consent"],
 };
+
+// Each step is a different component behind its own `step === "..."` check,
+// so switching steps always unmounts the old one and mounts the new one —
+// this entrance animation replays on every genuine mount for free.
+const STEP_TRANSITION_CLASS = "animate-in fade-in-0 slide-in-from-right-2 duration-300";
 
 export function DonationForm({ shelters }: { shelters: Shelter[] }) {
   const t = useTranslations("form");
@@ -108,12 +113,18 @@ export function DonationForm({ shelters }: { shelters: Shelter[] }) {
   // Move focus to the new step's heading on every step change so keyboard
   // and screen-reader users get a clear signal the view advanced, without
   // stealing focus from the URL bar on the initial page load.
+  // `preventScroll` + an explicit `scrollIntoView()` (rather than letting
+  // `focus()` snap the page itself) means the scroll follows the page's
+  // `scroll-behavior: smooth` from globals.css instead of jumping instantly
+  // — most noticeable on mobile, where "Pokračovať" sits far below the
+  // heading it needs to bring into view.
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
-    headingRef.current?.focus();
+    headingRef.current?.focus({ preventScroll: true });
+    headingRef.current?.scrollIntoView({ block: "start" });
   }, [step]);
 
   async function handleNext() {
@@ -172,9 +183,15 @@ export function DonationForm({ shelters }: { shelters: Shelter[] }) {
       <ErrorSummary messages={errorMessages} />
 
       <div ref={stepContentRef} className="contents">
-        {step === "shelter" && <ShelterStep form={form} shelters={shelters} />}
-        {step === "details" && <PersonalDetailsStep form={form} />}
-        {step === "confirm" && <ConfirmStep form={form} shelters={shelters} />}
+        {step === "shelter" && (
+          <ShelterStep form={form} shelters={shelters} className={STEP_TRANSITION_CLASS} />
+        )}
+        {step === "details" && (
+          <PersonalDetailsStep form={form} className={STEP_TRANSITION_CLASS} />
+        )}
+        {step === "confirm" && (
+          <ConfirmStep form={form} shelters={shelters} className={STEP_TRANSITION_CLASS} />
+        )}
       </div>
 
       {/* Figma pins the actions to the bottom of the content column. */}
@@ -201,6 +218,9 @@ export function DonationForm({ shelters }: { shelters: Shelter[] }) {
               })(event);
             }}
           >
+            {contribute.isPending && (
+              <Loader2 data-icon="inline-start" aria-hidden="true" className="animate-spin" />
+            )}
             {contribute.isPending ? t("submitting") : t("donate")}
           </Button>
         ) : (

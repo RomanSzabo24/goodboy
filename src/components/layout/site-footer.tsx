@@ -37,6 +37,7 @@ export async function SiteFooter({ className }: { className?: string }) {
                 target="_blank"
                 rel="noreferrer noopener"
                 aria-label={social.label}
+                className="inline-flex transition-opacity hover:opacity-70"
               >
                 <Image src={social.icon} alt="" width={16} height={16} aria-hidden="true" />
               </a>
@@ -46,12 +47,12 @@ export async function SiteFooter({ className }: { className?: string }) {
         <nav aria-label="Footer navigation">
           <ul className="flex items-center gap-8 text-base text-secondary-foreground">
             <li>
-              <Link href="/contact" className="hover:underline">
+              <Link href="/contact" className="transition-colors hover:text-foreground hover:underline">
                 {t("contact")}
               </Link>
             </li>
             <li>
-              <Link href="/about" className="hover:underline">
+              <Link href="/about" className="transition-colors hover:text-foreground hover:underline">
                 {t("about")}
               </Link>
             </li>

@@ -144,5 +144,20 @@
   }
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
+  }
+}
+
+/* Respect the user's reduced-motion preference for all decorative
+   transitions/animations, while keeping functional loading spinners
+   (.animate-spin) actually spinning rather than freezing mid-request. */
+@media (prefers-reduced-motion: reduce) {
+  *:not(.animate-spin),
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

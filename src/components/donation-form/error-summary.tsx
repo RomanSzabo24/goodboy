@@ -14,7 +14,7 @@ export function ErrorSummary({ messages }: ErrorSummaryProps) {
   return (
     <div
       role="alert"
-      className="flex flex-col gap-2 rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-destructive"
+      className="flex flex-col gap-2 rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-destructive animate-in fade-in-0 slide-in-from-top-1 duration-300"
     >
       <p className="text-sm font-semibold">{t("errorSummaryTitle", { count: messages.length })}</p>
       <ul className="ml-4 flex list-disc flex-col gap-1 text-sm">

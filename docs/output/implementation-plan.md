@@ -25,7 +25,7 @@
 | 6 | Submission, results, Contact + About pages | ✅ 8 / 8 |
 | 7 | Accessibility and responsiveness | ✅ 6 / 6 |
 | 8 | Tests | 🟡 4 / 6 |
-| 9 | Bonuses ⭐ | 🟡 2 / 6 (+1 partial) |
+| 9 | Bonuses ⭐ | 🟡 3 / 6 (+1 partial) |
 | 10 | Final check and handover | 🟡 5 / 6 |
 
 ---
@@ -239,7 +239,7 @@ Base URL: `https://frontend-assignment-api.goodrequest.dev`, endpoints per [open
 - [x] ⭐ Multiple donors (`contributors[]`) via `useFieldArray` — **done**, add/remove donor rows in `PersonalDetailsStep` — 📍 `feat: multiple donors via useFieldArray` (not yet committed)
 - [ ] ⭐ Search within the shelter list (`?search=` parameter with debounce) — **not done** (the `search` param is plumbed through `getShelters`/`useShelters` but nothing in the UI calls it) — 📍 `feat: debounced shelter search`
 - [ ] ⭐ Donor list / richer results display — **not done**; `ResultsSummary` shows only the total + count, no donor list — 📍 `feat: richer results/donor list display`
-- [ ] ⭐ Subtle animations and micro-interactions across the UI — **not done** — 📍 `feat: micro-interactions and animation polish`
+- [x] ⭐ Subtle animations and micro-interactions across the UI — **done, not yet committed** (implemented on request, awaiting review): step-content entrance transition on every wizard step change (each step already fully unmounts/mounts on `step` change, so `animate-in fade-in-0 slide-in-from-right-2` on `ShelterStep`/`PersonalDetailsStep`/`ConfirmStep` replays for free); `StepIndicator` circles/labels/connector now `transition-colors`, with the connector filling `bg-primary` once a step is complete and its checkmark popping in (`animate-in zoom-in-50`); field-level (`FieldError` in `field.tsx`) and the aggregated `ErrorSummary` both fade+slide in on mount instead of appearing instantly; `Checkbox`'s check mark pops in (`zoom-in-50`); the personal-details donor row fades in on both collapse-to-summary and expand-to-form; the confirm-step submit button gets a spinning `Loader2` next to "Submitting…"; `ResultsSummary`'s two metrics fade in whenever a background poll changes the formatted value; `Toggle`/`ToggleGroupItem` (the amount presets) get `active:scale-95` press feedback; `SiteFooter` nav links and social icons get a hover color/opacity transition. Also added a global `prefers-reduced-motion: reduce` override in `globals.css` (zeroes animation/transition durations for everything except `.animate-spin`, so the submit spinner keeps indicating real async work) — ties into the Phase 7 accessibility work rather than only being visual polish. Verified via `lint`/`build`/`test`/`test:e2e` (all green) and a manual click-through of the full flow in Chrome. — 📍 `feat: micro-interactions and animation polish` (not yet made, per instruction — implementation only, commit deferred for review)
 
 ---
 

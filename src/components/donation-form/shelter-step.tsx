@@ -29,9 +29,10 @@ const PRESET_AMOUNTS = [5, 10, 20, 30, 50, 100] as const;
 type ShelterStepProps = {
   form: DonationFormApi;
   shelters: Shelter[];
+  className?: string;
 };
 
-export function ShelterStep({ form, shelters }: ShelterStepProps) {
+export function ShelterStep({ form, shelters, className }: ShelterStepProps) {
   const t = useTranslations("helpType");
   const tAmount = useTranslations("amount");
   const helpType = form.watch("helpType");
@@ -41,7 +42,7 @@ export function ShelterStep({ form, shelters }: ShelterStepProps) {
     : undefined;
 
   return (
-    <FieldSet className="gap-10 lg:gap-6">
+    <FieldSet className={cn("gap-10 lg:gap-6", className)}>
       <Controller
         control={form.control}
         name="helpType"
@@ -60,14 +61,14 @@ export function ShelterStep({ form, shelters }: ShelterStepProps) {
           >
             <FieldLabel
               htmlFor="help-type-shelter"
-              className="flex-1 justify-center rounded-lg border-0 px-2 py-4 text-center text-sm has-data-checked:border-0 has-data-checked:bg-primary has-data-checked:text-primary-foreground has-not-data-checked:hover:bg-muted"
+              className="flex-1 justify-center rounded-lg border-0 px-2 py-4 text-center text-sm transition-colors duration-200 has-data-checked:border-0 has-data-checked:bg-primary has-data-checked:text-primary-foreground has-not-data-checked:hover:bg-muted"
             >
               <RadioGroupItem value="GIFT_SHELTER" id="help-type-shelter" className="sr-only" />
               {t("shelter")}
             </FieldLabel>
             <FieldLabel
               htmlFor="help-type-foundation"
-              className="flex-1 justify-center rounded-lg border-0 px-2 py-4 text-center text-sm has-data-checked:border-0 has-data-checked:bg-primary has-data-checked:text-primary-foreground has-not-data-checked:hover:bg-muted"
+              className="flex-1 justify-center rounded-lg border-0 px-2 py-4 text-center text-sm transition-colors duration-200 has-data-checked:border-0 has-data-checked:bg-primary has-data-checked:text-primary-foreground has-not-data-checked:hover:bg-muted"
             >
               <RadioGroupItem value="GIFT_FOUNDATION" id="help-type-foundation" className="sr-only" />
               {t("general")}
