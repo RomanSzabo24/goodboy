@@ -209,9 +209,9 @@ Base URL: `https://frontend-assignment-api.goodrequest.dev`, endpoints per [open
 > 📍 **Commit:** `test: unit and component tests for schemas, mapping and steps` (not yet made)
 
 - [x] E2E happy path (Playwright) — `e2e/donation-flow.spec.ts`: general donation → preset amount → fill details → confirm & consent → submit → confirmation screen, with only `POST /contribute` stubbed (the two `GET`s hit the real, read-only API). Updated in Phase 1.5 for the new 3-step flow and field-label copy; both specs still pass.
-- [ ] E2E validation scenario: empty required fields → errors, cannot advance — **not done as a distinct test.** The current e2e suite has the happy path plus an API-level `ERROR`-message scenario, but nothing exercising client-side "submit with empty/invalid fields → blocked, errors shown."
+- [x] E2E validation scenario: empty required fields → errors, cannot advance — **done.** `e2e/donation-flow.spec.ts`: a third spec walks all three steps with required fields left empty (amount, then surname/e-mail/phone, then consent), asserting the matching inline `FieldError` is shown by id and the step's heading stays put (navigation blocked) at each attempt, then fixes each step and confirms the next heading appears; the final assertion confirms the API is never called when consent is missing.
 
-> 📍 **Commit:** `test: e2e happy path and validation scenario (Playwright)` (not yet made — validation scenario missing)
+> 📍 **Commit:** `test: e2e happy path and validation scenario (Playwright)` (not yet made)
 
 ---
 
