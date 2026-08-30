@@ -21,7 +21,7 @@
 | 2 | Data layer (services + Zod + Query hooks) | 🟡 4 / 7 (restructured — see notes) |
 | 3 | Form validation schemas | ✅ 7 / 7 |
 | 4 | Form state (Zustand + RHF) | ✅ 4 / 4 (with noted deviations) |
-| 5 | UI — form steps (restructured — see notes) | 🟡 10 / 12 |
+| 5 | UI — form steps (restructured — see notes) | 🟡 11 / 12 |
 | 6 | Submission, results, Contact + About pages | 🟡 7 / 8 |
 | 7 | Accessibility and responsiveness | 🟡 2 / 6 |
 | 8 | Tests | 🟡 4 / 6 |
@@ -157,7 +157,7 @@ Base URL: `https://frontend-assignment-api.goodrequest.dev`, endpoints per [open
 
 - [x] Step 3 (`confirm-step.tsx`, "Potvrdenie") — **new step, not in the original plan**, added to match Figma: read-only summary of help type / shelter / amount / each donor's name+email+phone, followed by the single consent checkbox for the whole submission and the final submit button
 - [x] Field-level error display — `FieldError` under every input, `aria-invalid` set, `data-invalid` on the wrapping `Field` for styling
-- [ ] Error summary on submit attempt — **not done**; only per-field messages exist, there is no aggregated "N errors" summary block
+- [x] Error summary on submit attempt — **done.** `ErrorSummary` (`error-summary.tsx`) renders an aggregated, `role="alert"` block above the step content once the user has tried to advance/submit the current step and it's invalid (tracked via `attemptedStep`, not a plain effect-driven boolean, to avoid a setState-in-effect lint violation); it's reactive to `formState.errors` so it live-shrinks/clears as fields are fixed, not a frozen snapshot. Scoped to the current step's fields on `handleNext`, but to the whole form on the final confirm-step submit (since that revalidates the entire schema). Message flattening (including nested `contributors[]` errors, deduplicated) is a pure helper (`src/lib/form-errors.ts`, unit-tested) so it doesn't re-walk RHF's `ref` internals. Localized title uses ICU plural in both catalogs (`form.errorSummaryTitle`). Verified in the browser: shows "3 chyby vo formulári" on an empty details-step submit, correctly plural in Slovak (2-4 → "chyby"), and disappears live once fields are corrected.
 - [ ] Transitions/animations between steps — **not done.** Steps swap instantly with no animation. This is explicitly called out as rewarded in the assignment and is a clear follow-up (e.g. a simple fade/slide via `tw-animate-css`, which is already installed).
 - [x] Every step compared against its Figma screenshot — **done** (Phase 1.5); the wizard, Contact page and new About page were all visually verified against `get_screenshot` and the running app in Chrome at desktop and mobile widths
 

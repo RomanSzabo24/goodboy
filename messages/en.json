@@ -22,6 +22,7 @@
     "donate": "Donate",
     "submitting": "Submitting…",
     "submitError": "Something went wrong while submitting your donation. Please try again.",
+    "errorSummaryTitle": "{count, plural, one {# error} other {# errors}} in the form",
     "heading": {
       "shelter": "Choose how you'd like to help",
       "details": "We need a few details from you",
