@@ -10,7 +10,7 @@ export function StepIndicator({ currentIndex }: { currentIndex: number }) {
   const stepLabels = [t("shelter"), t("details"), t("confirm")];
 
   return (
-    <ol className="flex w-full items-center gap-4" aria-label={t("progressLabel")}>
+    <ol className="@container flex w-full items-center gap-4" aria-label={t("progressLabel")}>
       {stepLabels.map((label, index) => {
         const isComplete = index < currentIndex;
         const isCurrent = index === currentIndex;
@@ -36,7 +36,7 @@ export function StepIndicator({ currentIndex }: { currentIndex: number }) {
             </span>
             <span
               className={cn(
-                "hidden shrink-0 text-base whitespace-nowrap text-muted-foreground/30 transition-colors duration-300 sm:inline",
+                "hidden shrink-0 text-base whitespace-nowrap text-muted-foreground/30 transition-colors duration-300 @xl:inline",
                 (isCurrent || isComplete) && "text-foreground",
               )}
             >
