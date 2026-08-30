@@ -34,7 +34,11 @@ export function LanguageSwitcher() {
         });
       }}
     >
-      <SelectTrigger className="w-[110px]" aria-label={t("language")} disabled={isPending}>
+      <SelectTrigger
+        className="w-auto min-w-[130px] py-2 data-[size=default]:h-auto"
+        aria-label={t("language")}
+        disabled={isPending}
+      >
         <SelectValue />
       </SelectTrigger>
       <SelectContent>

@@ -2,15 +2,15 @@
 
 import { useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useForm, type Path } from "react-hook-form";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { AmountStep } from "@/components/donation-form/amount-step";
-import { HelpTypeStep } from "@/components/donation-form/help-type-step";
+import { ConfirmStep } from "@/components/donation-form/confirm-step";
 import { PersonalDetailsStep } from "@/components/donation-form/personal-details-step";
+import { ShelterStep } from "@/components/donation-form/shelter-step";
 import { StepIndicator } from "@/components/donation-form/step-indicator";
 import { SuccessStep } from "@/components/donation-form/success-step";
 import { useContribute } from "@/hooks/use-shelters";
@@ -32,9 +32,9 @@ import {
 } from "@/services/shelters";
 
 const STEP_FIELDS: Record<string, Path<DonationFormInput>[]> = {
-  "help-type": ["helpType", "shelterId"],
-  amount: ["amount"],
+  shelter: ["helpType", "shelterId", "amount"],
   details: ["contributors"],
+  confirm: ["consent"],
 };
 
 export function DonationForm({ shelters }: { shelters: Shelter[] }) {
@@ -100,40 +100,51 @@ export function DonationForm({ shelters }: { shelters: Shelter[] }) {
     reset();
   }
 
+  if (step === "success") {
+    return (
+      <div className="flex flex-1 flex-col">
+        <SuccessStep messages={successMessages} onDonateAgain={handleDonateAgain} />
+      </div>
+    );
+  }
+
   return (
-    <Card className="w-full max-w-xl">
-      <CardHeader>
-        <CardTitle>{t("title")}</CardTitle>
-        {step !== "success" && <StepIndicator currentIndex={stepIndex} />}
-      </CardHeader>
-      <CardContent>
-        {step === "help-type" && <HelpTypeStep form={form} shelters={shelters} />}
-        {step === "amount" && <AmountStep form={form} />}
-        {step === "details" && <PersonalDetailsStep form={form} />}
-        {step === "success" && (
-          <SuccessStep messages={successMessages} onDonateAgain={handleDonateAgain} />
-        )}
-      </CardContent>
-      {step !== "success" && (
-        <CardFooter className="justify-between">
-          <Button type="button" variant="ghost" onClick={goBack} disabled={stepIndex === 0}>
-            {t("back")}
+    <div className="flex flex-1 flex-col gap-10">
+      <StepIndicator currentIndex={stepIndex} />
+      <h1 className="w-full text-heading-lg font-bold text-foreground">{t(`heading.${step}`)}</h1>
+
+      {step === "shelter" && <ShelterStep form={form} shelters={shelters} />}
+      {step === "details" && <PersonalDetailsStep form={form} />}
+      {step === "confirm" && <ConfirmStep form={form} shelters={shelters} />}
+
+      {/* Figma pins the actions to the bottom of the content column. */}
+      <div className="mt-auto flex items-center justify-between gap-4 pt-2">
+        <Button
+          type="button"
+          variant="secondary"
+          size="xl"
+          onClick={goBack}
+          disabled={stepIndex === 0}
+        >
+          <ArrowLeft data-icon="inline-start" aria-hidden="true" />
+          {t("back")}
+        </Button>
+        {step === "confirm" ? (
+          <Button
+            type="button"
+            size="xl"
+            disabled={contribute.isPending}
+            onClick={form.handleSubmit(handleSubmit)}
+          >
+            {contribute.isPending ? t("submitting") : t("donate")}
           </Button>
-          {step === "details" ? (
-            <Button
-              type="button"
-              disabled={contribute.isPending}
-              onClick={form.handleSubmit(handleSubmit)}
-            >
-              {contribute.isPending ? t("submitting") : t("donate")}
-            </Button>
-          ) : (
-            <Button type="button" onClick={handleNext}>
-              {t("continue")}
-            </Button>
-          )}
-        </CardFooter>
-      )}
-    </Card>
+        ) : (
+          <Button type="button" size="xl" onClick={handleNext}>
+            {t("continue")}
+            <ArrowRight data-icon="inline-end" aria-hidden="true" />
+          </Button>
+        )}
+      </div>
+    </div>
   );
 }

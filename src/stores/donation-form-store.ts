@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export const DONATION_STEPS = ["help-type", "amount", "details", "success"] as const;
+export const DONATION_STEPS = ["shelter", "details", "confirm", "success"] as const;
 export type DonationStep = (typeof DONATION_STEPS)[number];
 
 type DonationFormStore = {

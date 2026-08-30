@@ -3,73 +3,97 @@
     "homeTitle": "GoodBoy Foundation — Support Slovak dog shelters",
     "homeDescription": "Donate to the GoodBoy Foundation or a specific Slovak dog shelter and help support animals in need.",
     "contactTitle": "Contact — GoodBoy Foundation",
-    "contactDescription": "Contact details for the GoodBoy Foundation."
+    "contactDescription": "Contact details for the GoodBoy Foundation.",
+    "aboutTitle": "About — GoodBoy Foundation",
+    "aboutDescription": "The GoodBoy Foundation's mission and results so far."
   },
   "nav": {
-    "donate": "Donate",
+    "about": "About",
     "contact": "Contact",
     "language": "Language"
   },
-  "home": {
-    "heading": "GoodBoy Foundation",
-    "subtitle": "Help us support Slovak dog shelters — donate to the foundation or to a shelter of your choice."
-  },
   "results": {
-    "raised": "raised so far",
-    "donors": "donors"
+    "totalRaised": "Total amount raised",
+    "donorCount": "Number of donors"
   },
   "form": {
-    "title": "Support the GoodBoy Foundation",
     "back": "Back",
     "continue": "Continue",
     "donate": "Donate",
     "submitting": "Submitting…",
-    "submitError": "Something went wrong while submitting your donation. Please try again."
+    "submitError": "Something went wrong while submitting your donation. Please try again.",
+    "heading": {
+      "shelter": "Choose how you'd like to help",
+      "details": "We need a few details from you",
+      "confirm": "Review your details"
+    }
   },
   "steps": {
-    "helpType": "Help type",
-    "amount": "Amount",
+    "shelter": "Choose shelter",
     "details": "Your details",
+    "confirm": "Confirmation",
     "progressLabel": "Donation form progress"
   },
   "helpType": {
     "legend": "How would you like to help?",
-    "description": "Support the GoodBoy Foundation in general, or choose a specific shelter to receive your donation.",
-    "general": "General donation",
-    "shelter": "Specific shelter",
+    "general": "Donate to the whole foundation",
+    "shelter": "Donate to a specific shelter",
     "shelterLabel": "Shelter",
-    "shelterPlaceholder": "Choose a shelter"
+    "shelterOptional": "(Optional)",
+    "shelterPlaceholder": "Choose a shelter from the list"
   },
   "amount": {
+    "heading": "The amount I'd like to donate",
     "description": "Choose a preset amount or enter your own.",
     "presetAriaLabel": "Preset donation amount",
-    "presetOptionAriaLabel": "{amount} euros",
-    "customLabel": "Custom amount (EUR)",
-    "customPlaceholder": "Enter amount"
+    "presetOptionAriaLabel": "{amount} euros"
   },
   "personalDetails": {
-    "yourDetails": "Your details",
+    "yourDetails": "About you",
     "donorNumber": "Donor {number}",
     "removeDonorAriaLabel": "Remove donor {number}",
-    "nameLabel": "Name (optional)",
+    "nameLabel": "Name",
     "surnameLabel": "Surname",
-    "emailLabel": "E-mail",
-    "phoneLabel": "Phone",
-    "consentLabel": "I consent to processing of my personal data by the GoodBoy Foundation.",
+    "emailLabel": "E-mail address",
+    "phoneLabel": "Phone number",
+    "consentLabel": "I consent to processing of my personal data",
     "addDonor": "Add another donor",
     "countryCodeAriaLabel": "Country code",
     "phonePlaceholder": "900 000 000",
     "countrySk": "Slovakia",
     "countryCz": "Czechia"
   },
+  "confirm": {
+    "summaryTitle": "Summary",
+    "helpTypeLabel": "Form of help",
+    "helpTypeFoundationValue": "Financial donation to the whole foundation",
+    "helpTypeShelterValue": "Financial donation to a shelter",
+    "shelterLabel": "Shelter",
+    "amountLabel": "Donation amount",
+    "nameLabel": "Full name",
+    "emailLabel": "E-mail",
+    "phoneLabel": "Phone number"
+  },
   "success": {
     "heading": "Thank you for your donation!",
     "donateAgain": "Make another donation"
   },
   "contact": {
-    "title": "Contact us",
-    "intro": "Have a question about donating or partnering with a shelter? Reach out to the GoodBoy Foundation team.",
-    "addressLine": "Búdková 1, 811 04 Bratislava, Slovakia"
+    "back": "Back",
+    "title": "Contact",
+    "emailTitle": "Email",
+    "emailSupporting": "Our friendly team is here to help.",
+    "officeTitle": "Office",
+    "officeSupporting": "Come say hello at our office.",
+    "addressLine": "Obchodná 3D, 010 08 Žilina, Slovakia",
+    "phoneTitle": "Phone",
+    "phoneSupporting": "Mon–Fri from 8am to 5pm."
+  },
+  "about": {
+    "back": "Back",
+    "title": "About the project",
+    "intro": "The Good Boy Foundation is dedicated to improving the lives of dogs in Žilina, Slovakia. We rescue abandoned, abused, and stray dogs, providing them with medical care, shelter, and the love they deserve. Our mission is to give these loyal companions a second chance at life by finding them a loving home. Beyond rescue and rehabilitation, we also promote responsible pet ownership and animal welfare through educational and community programs.",
+    "closing": "Our work is made possible by the support of passionate volunteers, generous donors, and a community that deeply cares about animal welfare. We also organize spay and neuter initiatives to address the stray dog problem and ensure long-term impact. At the Good Boy Foundation, we believe every dog deserves a safe, loving home and a happy life. Join us and help us make a difference — whether through volunteering, donating, or adopting a furry friend. Together we can build a better future for the dogs of Žilina."
   },
   "validation": {
     "phoneInvalid": "Enter a valid SK (+421) or CZ (+420) phone number",

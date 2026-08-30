@@ -16,8 +16,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
       }),
   );
 
+  // The Figma design only defines a light palette — force light rather than
+  // following the OS theme, so the app stays visually 1:1 with the design.
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+    <ThemeProvider attribute="class" forcedTheme="light" disableTransitionOnChange>
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </ThemeProvider>
   );

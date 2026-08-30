@@ -7,7 +7,6 @@ const validContributor = {
   surname: "Dobry",
   email: "jan@example.com",
   phone: "+421 900 000 000",
-  consent: true,
 };
 
 describe("skCzPhoneSchema", () => {
@@ -76,24 +75,11 @@ describe("contributorSchema — email", () => {
   });
 });
 
-describe("contributorSchema — consent", () => {
-  it("fails when consent is false", () => {
-    expect(contributorSchema.safeParse({ ...validContributor, consent: false }).success).toBe(
-      false,
-    );
-  });
-
-  it("passes when consent is true", () => {
-    expect(contributorSchema.safeParse({ ...validContributor, consent: true }).success).toBe(
-      true,
-    );
-  });
-});
-
 describe("donationFormSchema — amount", () => {
   const base = {
     helpType: "GIFT_FOUNDATION" as const,
     contributors: [validContributor],
+    consent: true,
   };
 
   it("fails on zero", () => {
@@ -109,12 +95,29 @@ describe("donationFormSchema — amount", () => {
   });
 });
 
+describe("donationFormSchema — consent", () => {
+  const base = {
+    helpType: "GIFT_FOUNDATION" as const,
+    amount: 10,
+    contributors: [validContributor],
+  };
+
+  it("fails when consent is false", () => {
+    expect(donationFormSchema.safeParse({ ...base, consent: false }).success).toBe(false);
+  });
+
+  it("passes when consent is true", () => {
+    expect(donationFormSchema.safeParse({ ...base, consent: true }).success).toBe(true);
+  });
+});
+
 describe("donationFormSchema — shelterId cross-field rule", () => {
   it("requires shelterId when helpType is GIFT_SHELTER", () => {
     const result = donationFormSchema.safeParse({
       helpType: "GIFT_SHELTER",
       amount: 10,
       contributors: [validContributor],
+      consent: true,
     });
     expect(result.success).toBe(false);
     if (!result.success) {
@@ -127,6 +130,7 @@ describe("donationFormSchema — shelterId cross-field rule", () => {
       helpType: "GIFT_FOUNDATION",
       amount: 10,
       contributors: [validContributor],
+      consent: true,
     });
     expect(result.success).toBe(true);
   });
@@ -137,6 +141,7 @@ describe("donationFormSchema — shelterId cross-field rule", () => {
       shelterId: 4,
       amount: 10,
       contributors: [validContributor],
+      consent: true,
     });
     expect(result.success).toBe(true);
   });

@@ -64,9 +64,6 @@ export function createContributorSchema(messages: ValidationMessages = defaultVa
       .max(30, { error: messages.surnameMax }),
     email: z.email({ error: messages.emailInvalid }),
     phone: createPhoneSchema(messages),
-    consent: z.boolean().refine((value) => value === true, {
-      error: messages.consentRequired,
-    }),
   });
 }
 export const contributorSchema = createContributorSchema();
@@ -80,6 +77,11 @@ export function createDonationFormSchema(messages: ValidationMessages = defaultV
         .number({ error: messages.amountRequired })
         .positive({ error: messages.amountPositive }),
       contributors: z.array(createContributorSchema(messages)).min(1),
+      // A single consent checkbox on the confirmation step covers the whole
+      // submission (matches Figma's "Potvrdenie" step) rather than one per donor.
+      consent: z.boolean().refine((value) => value === true, {
+        error: messages.consentRequired,
+      }),
     })
     .refine((data) => data.helpType !== "GIFT_SHELTER" || data.shelterId != null, {
       error: messages.shelterRequired,
@@ -104,7 +106,7 @@ export const donationFormDefaultValues: DonationFormInput = {
       surname: "",
       email: "",
       phone: "",
-      consent: false,
     },
   ],
+  consent: false,
 };

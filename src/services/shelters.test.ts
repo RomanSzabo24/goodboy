@@ -9,8 +9,9 @@ describe("toContributeBody", () => {
     helpType: "GIFT_FOUNDATION",
     amount: 15,
     contributors: [
-      { name: undefined, surname: "Dobry", email: "jan@example.com", phone: "+421 900 000 000", consent: true },
+      { name: undefined, surname: "Dobry", email: "jan@example.com", phone: "+421 900 000 000" },
     ],
+    consent: true,
   };
 
   it("maps GIFT_FOUNDATION to a null shelterID", () => {

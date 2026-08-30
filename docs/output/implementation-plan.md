@@ -7,7 +7,7 @@
 >
 > **Commit convention:** small, working commits per checkpoint (Conventional Commits style: `feat:`, `fix:`, `chore:`, `test:`, `docs:`). Only commit at a 📍 marker once the preceding tasks build/lint clean — never commit a broken intermediate state.
 
-**State as of 2026-08-29:** Phases 0–1 are committed (`chore: install core dependencies and configure tooling`, `feat: base app structure, providers and layout`). Phases 2–4 and most of 5–6 were implemented in the same working session but landed in that second commit too — this document's checklist state didn't get updated at the time, which is corrected now. Phases 0–4 and most of 5–6 are functionally implemented and verified (`typecheck`, `lint`, `test`, `test:e2e`, `build` all green; the full donation flow and Contact page were also exercised manually in a browser). **Phase 1.5 (Figma assets/tokens/visual parity) was skipped entirely** — the UI was built from `CLAUDE.md`'s business rules and shadcn/Tailwind defaults, not against the actual Figma frames, so it is not yet visually verified 1:1 against the design file. **The language open question is now resolved:** the app uses `next-intl` with Slovak as the default locale and English as a switchable secondary locale (routed via a `[locale]` segment, see Phase 9). All UI copy and Zod validation messages are localized through message catalogs; several accessibility/polish items from Phases 7–10 remain outstanding. See the per-phase notes below for exact deviations. Nothing has been committed yet beyond the two commits above — awaiting manual review/commit by the repo owner.
+**State as of 2026-08-30:** Phases 0–1 are committed (`chore: install core dependencies and configure tooling`, `feat: base app structure, providers and layout`). Phases 2–4 and most of 5–6 were implemented in the same working session but landed in that second commit too — this document's checklist state didn't get updated at the time, which is corrected now. Phases 0–4 and most of 5–6 are functionally implemented and verified (`typecheck`, `lint`, `test`, `test:e2e`, `build` all green; the full donation flow and Contact page were also exercised manually in a browser). **Phase 1.5 (Figma assets/tokens/visual parity) is now done** — real Figma data (frames, variables, assets, screenshots) was pulled and the app was rebuilt to match, including a full information-architecture rework of the donation wizard to mirror Figma's actual 3-step flow (see Phase 1.5 notes below; this reshapes what Phases 3–6 originally described). **The language open question is now resolved:** the app uses `next-intl` with Slovak as the default locale and English as a switchable secondary locale (routed via a `[locale]` segment, see Phase 9). All UI copy and Zod validation messages are localized through message catalogs; several accessibility/polish items from Phases 7–10 remain outstanding. See the per-phase notes below for exact deviations. Nothing has been committed yet beyond the two commits above — awaiting manual review/commit by the repo owner.
 
 ---
 
@@ -17,16 +17,16 @@
 |---|-------|--------|
 | 0 | Dependency & tooling setup | ✅ 6 / 6 |
 | 1 | Base structure and providers | 🟡 4 / 5 |
-| 1.5 | Figma: assets, tokens and components | ⬜ 0 / 9 (skipped) |
+| 1.5 | Figma: assets, tokens and components | ✅ 9 / 9 |
 | 2 | Data layer (services + Zod + Query hooks) | 🟡 3 / 7 (restructured — see notes) |
 | 3 | Form validation schemas | ✅ 7 / 7 |
 | 4 | Form state (Zustand + RHF) | ✅ 4 / 4 (with noted deviations) |
-| 5 | UI — form steps | 🟡 7 / 10 |
-| 6 | Submission, results, Contact page | 🟡 6 / 7 |
-| 7 | Accessibility and responsiveness | 🟡 1 / 6 |
+| 5 | UI — form steps (restructured — see notes) | 🟡 10 / 12 |
+| 6 | Submission, results, Contact + About pages | 🟡 7 / 8 |
+| 7 | Accessibility and responsiveness | 🟡 2 / 6 |
 | 8 | Tests | 🟡 4 / 6 |
 | 9 | Bonuses ⭐ | 🟡 2 / 6 (+1 partial) |
-| 10 | Final check and handover | 🟡 3 / 6 |
+| 10 | Final check and handover | 🟡 5 / 6 |
 
 ---
 
@@ -57,28 +57,41 @@
 
 ## Phase 1.5 — Figma: assets, tokens and components
 
-**Status: skipped in this pass.** No `figma-design-to-code`/`figma-use` MCP calls were made and no Figma data (frames, tokens, assets, screenshots) was pulled at all. The UI was implemented directly from `CLAUDE.md`'s written business rules plus shadcn/Tailwind defaults. This satisfies the functional requirements but **not** the assignment's visual-fidelity goal ("the UI must look 1:1 like Figma") — every box below is still open:
+**Status: done.** Pulled the real file (`71F9aOieGNZNowSETLum7t`) via `get_metadata`/`get_design_context`/`get_variable_defs`/`get_screenshot`/`download_assets` and rebuilt the UI against it. This surfaced a structural mismatch, not just a visual one: Figma's actual 3-step wizard is **Výber útulku** (help-type segmented control + optional shelter select + amount picker, all on one screen) → **Osobné údaje** (personal details only) → **Potvrdenie** (a read-only review/summary screen + the single consent checkbox + submit) — different from the previously-built help-type/shelter → amount → personal-details+consent split with no review step. Given the size of that gap, the user was asked how far to reconcile it and chose the full rebuild; this is documented here since it reshapes Phases 3–6 below rather than only adding a visual coat of paint.
 
 ### Assets (images, icons, logo)
 
-- [ ] Walk the Figma file via `get_metadata` and list every image, illustration, icon and logo used in the design
-- [ ] Download assets via `download_assets` into `public/` (logo, step illustrations, SK/CZ flags, icons, any backgrounds); rasters at 1× and 2×, vectors as SVG
-- [ ] Normalize naming and structure under `public/` (e.g. `public/images/`, `public/icons/`) — kebab-case filenames
-- [ ] Use `next/image` with correct `width`/`height`/`alt`; SVG icons as components or inline, never as `<img>` without alt
-- [ ] Verify no image is substituted by a placeholder or emoji — everything comes from Figma — **currently violated:** the SK/CZ country picker uses the 🇸🇰/🇨🇿 flag emoji (which even renders as plain "SK"/"CZ" text on Windows, no real flag glyph) instead of a Figma-sourced flag asset, and `lucide-react` icons (`PawPrint`, `HeartHandshake`, etc.) stand in for whatever iconography Figma actually specifies
-
-> 📍 **Commit:** `chore: add Figma assets (images, icons, logo)` (not yet made)
+- [x] Walked the file via `get_metadata`/`get_screenshot` and identified every image/icon/logo actually used
+- [x] Downloaded real assets via `download_assets` into `public/images/` (logo, contact "featured icon" badges, two hero photos — `hero-dog-beach.png` reused across all 3 form steps per Figma, `hero-dog-sunset.png` on the Contact page) and `public/icons/` (`flag-sk.svg`, pulled from the design)
+- [x] Normalized naming to kebab-case under `public/images/` and `public/icons/`
+- [x] Used `next/image` everywhere (`width`/`height` or `fill` + `sizes`, real `alt`); had to add `images.dangerouslyAllowSVG: true` in `next.config.ts` for the local flag SVGs
+- [x] No more placeholder/emoji icons for anything Figma actually specifies — **one flagged exception:** Figma's file only mocks the SK flag (never shows a CZ state), so `public/icons/flag-cz.svg` was hand-authored to match the SK asset's circular-badge style. Flag geometry is a defined public-domain national symbol, not original iconography, so this doesn't violate the "everything comes from Figma" rule the way the emoji it replaces did. Generic/universal glyphs Figma doesn't brand distinctly (chevrons, checkmarks, the euro sign, the back-arrow) still come from `lucide-react`, consistent with the rest of the codebase — only the brand-specific iconography (logo, contact icons, flags, photos) was pulled from Figma.
 
 ### Design tokens and components
 
-- [ ] Pull variables via `get_variable_defs` (colors, spacing, typography, radii) and port them 1:1 into `@theme` in `globals.css` — no hardcoded hex/px values in components
-- [ ] Map the components from the Figma pages onto code components — one Figma component = one reusable component in `src/components/`, with the same variants and states (default / hover / focus / disabled / error)
-- [x] Genuinely share the same components across screens (buttons, inputs, cards, badges, stepper) — this part holds regardless of Figma: all steps reuse the same shadcn primitives (`Button`, `Card`, `Field*`, `Input`, `Select`, `RadioGroup`, `Checkbox`, `ToggleGroup`) via props/variants, no copy-pasted variants
-- [ ] Visually diff every screen against `get_screenshot` and against the running app in the browser, then fix the deviations
+- [x] Pulled variables via `get_variable_defs` (colors, typography, spacing, container widths) and ported them into `globals.css`: `:root`'s `--background/--foreground/--primary/--secondary/--muted/--accent/--border/--input/--ring` now hold Figma's literal hex values (`#4F46E5` primary, `#F3F4F6` muted/field-fill, `#111827` foreground, etc.) instead of the generic shadcn OKLCH grayscale; added `--text-heading-lg`/`--text-heading-xl` theme tokens for the 48px/60px display sizes. Figma's 8/20/32/64px spacing and 1280px container width map exactly onto Tailwind's default spacing scale and `max-w-7xl`, so no custom spacing tokens were needed.
+- [x] Swapped the Geist Sans font for Inter (`latin` + `latin-ext` subsets, the latter required for SK/CZ diacritics) to match every Figma typography token, which specifies Inter by name — **found and fixed a pre-existing bug** while at it: `--font-sans` in `globals.css` was self-referential (`--font-sans: var(--font-sans)`), so the app was silently falling back to the browser's default serif font this whole time, unrelated to which font was loaded.
+- [x] Mapped Figma's components onto code: `Input`/`SelectTrigger` restyled to Figma's filled-field look (`bg-input`, borderless, `h-14`, `p-4`) shared across every field; a hand-styled segmented control (RadioGroup + sr-only inputs) replaces the old card-style help-type radios; the amount step got Figma's large underlined numeric input + 6-preset row (`5/10/20/30/50/100 €`, corrected from the placeholder `5/10/25/50`); `StepIndicator` rebuilt with Figma's circle+checkmark+connector style; a new `ConfirmStep` matches Figma's summary/review screen; a new `SiteFooter` (logo + Kontakt/O projekte links) matches Figma's persistent footer, present on every page now
+- [x] Kept sharing primitives across screens — same shadcn components via props/variants, no copy-pasted variants
+- [x] Visually diffed every screen against `get_screenshot` and the running app (Chrome), iterating until they matched — see deviations below
 
-> 📍 **Commit:** `feat: design tokens and shared UI components from Figma` (not yet made)
+**Second pass — corrections after review.** A first pass got the tokens/assets right but kept several structures Figma doesn't have. Re-checked against the frames and fixed:
+- **Site header removed entirely.** Figma has no header on any frame — navigation lives only in the footer. `site-header.tsx` was deleted and the `LanguageSwitcher` moved into `SiteFooter` (it's a bonus feature Figma never shows, and the footer is now the only nav surface).
+- **Totals widget moved to "O projekte" only.** The "vyzbierané doteraz / darcov" card was on the donation form page, which Figma doesn't show at all. `ResultsSummary` was restyled into Figma's About-page metric pair (two large `#4F46E5` numbers between top/bottom rules) and now renders **only** on `/about`. It stays a client component so the numbers keep polling live rather than being frozen at Figma's mock values (`12 200 €` / `1 028`).
+- **Footer scoped to the content column.** Figma nests the footer *inside* the 658px form column, so on the donation page it stops where the side photo begins rather than spanning the viewport. `SiteFooter` was pulled out of the root layout and is now placed per page — inside the form column on `/`, full-width on `/contact` and `/about` (which have no side photo). It also gained the top rule, the real Facebook/Instagram icons from the design, and Figma's 32px link spacing.
+- **Action buttons corrected.** Figma's "Späť" is a filled secondary button with a left-arrow icon and "Pokračovať" carries a right-arrow — both 32px/16px padding, 16px label. Added an `xl` size to `buttonVariants` and switched Back from `ghost` to `secondary`. The actions are also pinned to the bottom of the column (`mt-auto`) as in the design.
+- **Missing "Späť" back link added to `/contact`.** Both the Contact and O projekte frames open with one; only About had it.
 
-**Note:** Figma defines the *look*; business rules (field lengths, required/optional, phone format, consent) follow `CLAUDE.md`. If they conflict, `CLAUDE.md` wins and the discrepancy gets reported. (No conflict was found because Figma was never checked — this needs to happen before the visual-parity work above can start.)
+**Deviations knowingly kept (all judgment calls, not oversights):**
+- **Multi-donor stays.** Figma only mocks a single donor; the `useFieldArray` multi-donor bonus (Phase 9) was kept since it's genuine extra functionality, not a visual regression — the per-donor consent checkbox that used to live in this step was removed and replaced by Figma's single top-level consent field on the confirmation step (schema: `consent` moved from `contributorSchema` to `donationFormSchema`).
+- **Socials shown on every footer.** Figma only draws the Facebook/Instagram icons in Step 1's footer and omits them from Steps 2–3, Contact and About — almost certainly mock inconsistency rather than intent, so they're rendered consistently everywhere. Links point at the bare platform domains since the design specifies no real profile URLs.
+- **New `/about` route added.** Figma's "O projekte" frame had no equivalent page in the app before this pass; added `src/app/[locale]/about/page.tsx` with the same copy and the live totals described above.
+- **Contact page copy adapted, not copied verbatim.** Figma's Contact frame mixes English placeholder copy with an unrelated `hello@goodrequest.com` email (a leftover from the design tool's own template, not the fictional foundation) — the layout/icons were matched exactly but the copy was localized into `messages/{sk,en}.json` and the email swapped to `info@goodboyfoundation.sk`; the Žilina office address and `+421 911 750 750` phone number from Figma were kept as-is.
+- **Forced light theme.** The Figma file only defines a light palette; `ThemeProvider` was switched from `defaultTheme="system"` to `forcedTheme="light"` in `src/app/providers.tsx` so the app doesn't silently break Figma parity for users/browsers with a dark OS preference (which is how the mismatch was first caught during manual QA).
+
+> 📍 **Commit:** `feat: rebuild UI from Figma (tokens, assets, components, IA rework)` (not yet made)
+
+**Note:** Figma defines the *look*; business rules (field lengths, required/optional, phone format, consent) still follow `CLAUDE.md`. No conflicts were found — Figma's copy/layout and `CLAUDE.md`'s validation rules line up everywhere they overlap.
 
 ---
 
@@ -107,8 +120,8 @@ Base URL: `https://frontend-assignment-api.goodrequest.dev`, endpoints per [open
 - [x] `amount`: required positive number — kept as `z.number().positive()` (not `z.coerce.number()`, see rationale below) with the number `<input>` registered via RHF's `valueAsNumber: true`; an empty/non-numeric input becomes `NaN`, which fails `.positive()` and surfaces the "Amount must be greater than 0" message rather than a raw type error
 - [x] Personal details: `name` optional 2–20 chars (empty string → `undefined` via `.refine()` + `.transform()`, tested explicitly for the `""` edge case), `surname` required 2–30, `email` required and valid (`z.email()`, Zod v4 top-level form)
 - [x] `phone`: SK `+421` / CZ `+420` format — **deviation:** implemented as a **single combined schema** (`skCzPhoneSchema`, one regex over the full `"+421 900 000 000"` string) rather than "separate schema + normalization before submit." The `PhoneInput` component itself splits/recombines prefix + national number for display, so the country-flag UI and the single-string schema stay in sync by construction; no separate normalization step was needed.
-- [x] `consent`: **deviation:** `z.boolean().refine(v => v === true)` instead of `z.literal(true)`. Reason: `z.literal(true)` makes the *input* type of the field also `true`, which makes it impossible to type a legitimate unchecked (`false`) default value for the checkbox without an unsafe cast. `z.boolean().refine(...)` keeps `false` as a valid default while still failing validation until the box is checked.
-- [x] Slovak error messages for all rules — **done via the Phase 9 i18n bonus.** `donation.ts` exports `createDonationFormSchema(messages: ValidationMessages)` / `createContributorSchema` / `createPhoneSchema` factories instead of static schemas; `DonationForm` builds the schema with `useTranslations("validation")` strings memoized via `useMemo`. The plain `donationFormSchema`/`contributorSchema`/`skCzPhoneSchema` exports still exist (built from `defaultValidationMessages`, English) purely so `donation.test.ts` and the `HelpTypeStep` test harness don't need a translation context to exercise validation logic — they're not used by the running app.
+- [x] `consent`: **deviation:** `z.boolean().refine(v => v === true)` instead of `z.literal(true)`. Reason: `z.literal(true)` makes the *input* type of the field also `true`, which makes it impossible to type a legitimate unchecked (`false`) default value for the checkbox without an unsafe cast. `z.boolean().refine(...)` keeps `false` as a valid default while still failing validation until the box is checked. **Moved in the Phase 1.5 rework:** `consent` now lives on `donationFormSchema` directly rather than on `contributorSchema` — Figma's "Potvrdenie" step shows a single consent checkbox for the whole submission, not one per donor (see Phase 1.5).
+- [x] Slovak error messages for all rules — **done via the Phase 9 i18n bonus.** `donation.ts` exports `createDonationFormSchema(messages: ValidationMessages)` / `createContributorSchema` / `createPhoneSchema` factories instead of static schemas; `DonationForm` builds the schema with `useTranslations("validation")` strings memoized via `useMemo`. The plain `donationFormSchema`/`contributorSchema`/`skCzPhoneSchema` exports still exist (built from `defaultValidationMessages`, English) purely so `donation.test.ts` and the `ShelterStep` test harness don't need a translation context to exercise validation logic — they're not used by the running app.
 
 > 📍 **Commit:** `feat: form validation schemas (Zod)` (not yet made)
 
@@ -116,9 +129,9 @@ Base URL: `https://frontend-assignment-api.goodrequest.dev`, endpoints per [open
 
 ## Phase 4 — Form state
 
-- [x] `src/stores/donation-form-store.ts` (Zustand) — holds only `step` + `goToStep`/`goNext`/`goBack`/`reset`; **deviation:** does not also hold "the in-progress data" — form field values live solely in the single `useForm` instance in `DonationForm`, which is fine since the whole multi-step flow is one mounted component (no unmount/remount between steps that would lose RHF state)
+- [x] `src/stores/donation-form-store.ts` (Zustand) — holds only `step` + `goToStep`/`goNext`/`goBack`/`reset`; **deviation:** does not also hold "the in-progress data" — form field values live solely in the single `useForm` instance in `DonationForm`, which is fine since the whole multi-step flow is one mounted component (no unmount/remount between steps that would lose RHF state). **Renamed in the Phase 1.5 rework** to match Figma's actual steps: `DONATION_STEPS = ["shelter", "details", "confirm", "success"]` (was `["help-type", "amount", "details", "success"]` — help-type/shelter/amount now live together on one screen, and `confirm` is the new review step).
 - [x] A single `useForm` with `zodResolver` across all steps — **deviation:** `mode: "onBlur"` rather than `mode: "onTouched"` (both satisfy "clearly notify the user of errors" without shouting mid-keystroke; `onTouched` would additionally re-show an error while still focused after a blur — a minor UX difference, easy to switch if preferred)
-- [x] Per-step validation (`form.trigger([...fieldsForThisStep])`) — implemented via a `STEP_FIELDS` map keyed by step name; no advancing without passing validation
+- [x] Per-step validation (`form.trigger([...fieldsForThisStep])`) — implemented via a `STEP_FIELDS` map keyed by step name (`shelter: [helpType, shelterId, amount]`, `details: [contributors]`, `confirm: [consent]`); no advancing without passing validation
 - [x] Reset both form and store after a successful submission — **implemented as user-initiated**, not automatic: on success the flow shows a confirmation screen with the API's `messages[]`, and `form.reset()` + store `reset()` only fire when the user clicks "Make another donation." (Kept deliberately so the confirmation screen doesn't blank out immediately.)
 
 > 📍 **Commit:** `feat: multi-step form state (Zustand + RHF)` (not yet made)
@@ -127,29 +140,28 @@ Base URL: `https://frontend-assignment-api.goodrequest.dev`, endpoints per [open
 
 ## Phase 5 — UI: form steps
 
-- [x] Step indicator (progress) — hand-rolled `StepIndicator` (numbered circles + connecting line); **not verified against Figma** (see Phase 1.5)
-- [x] Step 1 — help type selection (`GIFT_FOUNDATION` / `GIFT_SHELTER`) as radio "cards" — `RadioGroupItem` wrapped in `FieldLabel`+`Field`, which shadcn's own CSS turns into a bordered/hoverable card
-- [x] Step 1 — shelter selection (`Select`) — 🟡 **deviation:** bound to a **server-fetched** `shelters` prop (fetched once in the `page.tsx` Server Component and passed down), not to the client `useShelters()` hook. That means there's currently **no client-side loading skeleton, no error fallback, and no explicit empty-list state** for the shelter picker — if the server-side fetch fails, Next's error boundary shows a generic error page instead of a graceful in-form fallback. `useShelters()` exists and is ready to use if this needs to become a client-fetched, re-searchable list later (see the Phase 9 shelter-search bonus).
+**Restructured in Phase 1.5** to match Figma's actual 3-step wizard (`shelter` → `details` → `confirm`) instead of the originally-planned `help-type` → `amount` → `details` split — see Phase 1.5 for why. `help-type-step.tsx` and `amount-step.tsx` no longer exist; their content is merged into `shelter-step.tsx`, and a new `confirm-step.tsx` was added.
 
-> 📍 **Commit:** `feat(form): step indicator and help-type/shelter step` (not yet made)
+- [x] Step indicator (progress) — `StepIndicator` rebuilt to match Figma: circle+checkmark per completed step, connecting "tail" line, current step filled — **verified against Figma** (see Phase 1.5)
+- [x] Step 1 (`shelter-step.tsx`, "Výber útulku") — help type as a Figma-style segmented control (`RadioGroup` with `sr-only` inputs styled as pill tabs, not the old bordered radio cards), shelter selection, **and** the amount picker all on one screen, matching Figma exactly
+- [x] Shelter selection (`Select`) — 🟡 **deviation:** bound to a **server-fetched** `shelters` prop (fetched once in the `page.tsx` Server Component and passed down), not to the client `useShelters()` hook. That means there's currently **no client-side loading skeleton, no error fallback, and no explicit empty-list state** for the shelter picker — if the server-side fetch fails, Next's error boundary shows a generic error page instead of a graceful in-form fallback. `useShelters()` exists and is ready to use if this needs to become a client-fetched, re-searchable list later (see the Phase 9 shelter-search bonus). **Deviation from Figma's layout:** the shelter field is always rendered (Figma never hides it), but its label switches between "(Nepovinné)" and no suffix, and validation still only requires it for `GIFT_SHELTER`, per `CLAUDE.md`.
+- [x] Amount picker — Figma's large underlined numeric input (euro icon, `text-heading-xl`) + 6-preset row, corrected to Figma's actual values **5/10/20/30/50/100 €** (was a 5/10/25/50 placeholder guess — see Open questions, now resolved)
 
-- [x] Step 2 — preset amounts (`ToggleGroup`, 5/10/25/50 €) + custom amount input, kept in sync both ways (picking a preset updates the number input and vice versa) — **note:** preset values/copy are placeholders, not sourced from Figma (see Open questions)
+> 📍 **Commit:** `feat(form): shelter step (help type, shelter, amount)` (not yet made)
 
-> 📍 **Commit:** `feat(form): amount step` (not yet made)
+- [x] Step 2 (`personal-details-step.tsx`, "Osobné údaje") — name, surname, email, phone; consent checkbox **removed from this step** (moved to the confirm step, see below)
+- [x] Phone with +421/+420 country-code picker and a real flag icon (`PhoneInput`) — SK flag downloaded from Figma, CZ flag hand-authored to match (see Phase 1.5)
+- [x] ⭐ (bonus, done ahead of Phase 9) multi-donor support via `useFieldArray` — add/remove donor rows, each with its own name/surname/email/phone (Figma only shows a single donor; kept as a deliberate bonus, see Phase 1.5 deviations)
 
-- [x] Step 3 — personal details (name, surname, email)
-- [x] Step 3 — phone with +421/+420 country-code picker and country flag (`PhoneInput`)
-- [x] Step 3 — consent checkbox for personal data processing
-- [x] ⭐ (bonus, done ahead of Phase 9) multi-donor support via `useFieldArray` — add/remove donor rows, each with its own name/surname/email/phone/consent
+> 📍 **Commit:** `feat(form): personal details step (name, phone)` (not yet made)
 
-> 📍 **Commit:** `feat(form): personal details step (name, phone, consent)` (not yet made)
-
+- [x] Step 3 (`confirm-step.tsx`, "Potvrdenie") — **new step, not in the original plan**, added to match Figma: read-only summary of help type / shelter / amount / each donor's name+email+phone, followed by the single consent checkbox for the whole submission and the final submit button
 - [x] Field-level error display — `FieldError` under every input, `aria-invalid` set, `data-invalid` on the wrapping `Field` for styling
 - [ ] Error summary on submit attempt — **not done**; only per-field messages exist, there is no aggregated "N errors" summary block
 - [ ] Transitions/animations between steps — **not done.** Steps swap instantly with no animation. This is explicitly called out as rewarded in the assignment and is a clear follow-up (e.g. a simple fade/slide via `tw-animate-css`, which is already installed).
-- [ ] Every step compared against its Figma screenshot — **not done** (Phase 1.5 was skipped)
+- [x] Every step compared against its Figma screenshot — **done** (Phase 1.5); the wizard, Contact page and new About page were all visually verified against `get_screenshot` and the running app in Chrome at desktop and mobile widths
 
-> 📍 **Commit:** `feat(form): error summary, step transitions and Figma visual polish` (not yet made — and not yet earned, since the error summary and transitions aren't built)
+> 📍 **Commit:** `feat(form): confirmation step (summary + consent)` (not yet made)
 
 ---
 
@@ -161,15 +173,16 @@ Base URL: `https://frontend-assignment-api.goodrequest.dev`, endpoints per [open
 
 > 📍 **Commit:** `feat: form submission with success/error states` (not yet made)
 
-- [x] "Total raised + donor count" widget (`ResultsSummary`) bound to `useSheltersResults` (client, `refetchInterval: 30_000`) seeded with a server-fetched `initialData` prop; currency formatted via `Intl.NumberFormat("sk-SK", { style: "currency", currency: "EUR" })`
+- [x] "Total raised + donor count" widget (`ResultsSummary`) bound to `useSheltersResults` (client, `refetchInterval: 30_000`) seeded with a server-fetched `initialData` prop; currency formatted via next-intl's locale-aware `useFormatter()`. **Lives only on `/about`** — Figma shows these totals on the "O projekte" frame and nowhere else (it was wrongly placed on the donation form in the first Figma pass).
 - [ ] Loading skeleton and error fallback for the widget — 🟡 **partial by design, not fully done:** because the page always passes real `initialData` from the server, there's no loading flash to cover — but there's also **no visible error state** if the client-side refetch fails; it silently keeps showing the last good (or initial) data with no indicator to the user
 
 > 📍 **Commit:** `feat: totals/donor-count results widget` (not yet made)
 
-- [x] `/contact` page with the organization's contact details (Server Component, static)
-- [x] Navigation between the form and the contact page (`SiteHeader`)
+- [x] `/contact` page with the organization's contact details (Server Component, static) — rebuilt in Phase 1.5 to match Figma's back link + 3 "featured icon" cards (email/office/phone) + hero photo layout, with the real contact icons downloaded from Figma
+- [x] ⭐ `/about` ("O projekte") page added in Phase 1.5 to match a Figma frame that had no route before — mission copy plus the live total-raised/donor-count metric pair (`ResultsSummary`, sourced from `getSheltersResults()`, not hardcoded like Figma's mock numbers)
+- [x] Navigation between the form, About and Contact pages — via `SiteFooter` only (logo + socials + Kontakt/O projekte + language switcher). **No site header**, matching Figma; the footer is scoped to each page's content column so it stops at the side photo on the donation form.
 
-> 📍 **Commit:** `feat: Contact page and navigation` (not yet made)
+> 📍 **Commit:** `feat: Contact page, About page and footer navigation` (not yet made)
 
 ---
 
@@ -180,7 +193,7 @@ Base URL: `https://frontend-assignment-api.goodrequest.dev`, endpoints per [open
 - [ ] Focus management on step change, and focus moved to the first error — **not done.** No `.focus()` call moves focus into the new step's heading/first field on `goNext`/`goBack`, and a failed `form.trigger()` doesn't move focus to the first invalid field.
 - [ ] Contrast and a visible focus ring per WCAG — 🟡 relies entirely on shadcn's default `focus-visible:ring-*` styles and its default color tokens; **not independently checked** against WCAG contrast ratios.
 - [x] Mobile-first Tailwind classes per the `mobile-first-design` skill — base (unprefixed) classes are mobile, `sm:`/breakpoint variants layer on top throughout (e.g. `grid gap-4 sm:grid-cols-2`, `hidden ... sm:inline`)
-- [ ] Verify layout at 375 / 768 / 1440 px against Figma — **not done.** A resize-and-screenshot attempt during manual QA didn't actually change the rendered viewport (tooling limitation in this session), and there's no Figma reference to check against anyway (Phase 1.5 skipped).
+- [x] Verify layout at mobile (390px) and desktop (1440px) against Figma — **done in Phase 1.5** via the Chrome browser tool. 768px (tablet) wasn't separately checked; Figma only supplies desktop (1440px) frames, so the mobile layout is this app's own responsive interpretation, not a 1:1 frame match — below `lg` the side photo is hidden and the form/footer take the full width.
 
 ---
 
@@ -188,12 +201,12 @@ Base URL: `https://frontend-assignment-api.goodrequest.dev`, endpoints per [open
 
 - [x] Unit tests for the Zod schemas — `src/lib/validations/donation.test.ts`: phone (+421/+420 accepted, +48 and no-code rejected), name (empty passes, 1/21 chars fail), surname boundaries, invalid email, consent `false` rejected, amount zero/negative/positive, both branches of the `shelterId` refine
 - [x] Unit test for the form → API payload mapping — `src/services/shelters.test.ts`: `GIFT_FOUNDATION`→`shelterID: null`, `GIFT_SHELTER`→chosen id, absent name → `firstName: ""`, plus `getContributeError` (no `ERROR` → `undefined`; `ERROR` present despite HTTP 200 → returned)
-- [ ] Component tests for the steps (RTL): error rendering, blocked navigation to the next step — 🟡 **partial.** `src/components/donation-form/help-type-step.test.tsx` covers the conditional shelter-picker (shows/hides based on `helpType`), but there is **no** component test asserting an error renders inline in `AmountStep`/`PersonalDetailsStep`, and no test asserting that an invalid step actually blocks `goNext()`.
+- [ ] Component tests for the steps (RTL): error rendering, blocked navigation to the next step — 🟡 **partial.** `src/components/donation-form/shelter-step.test.tsx` (replaces the old `help-type-step.test.tsx`, which was deleted along with `help-type-step.tsx`/`amount-step.tsx` in the Phase 1.5 rework) covers the optional/required shelter label toggling and that clicking a preset amount updates the numeric input, but there is still **no** component test asserting an error renders inline in `PersonalDetailsStep`/`ConfirmStep`, and no test asserting that an invalid step actually blocks `goNext()`.
 - [ ] Component test for the results widget with a mocked fetch (MSW or a mocked service) — **not done.** No test exists for `ResultsSummary`/`useSheltersResults`.
 
 > 📍 **Commit:** `test: unit and component tests for schemas, mapping and steps` (not yet made — and per the gaps above, not fully earned)
 
-- [x] E2E happy path (Playwright) — `e2e/donation-flow.spec.ts`: general donation → preset amount → fill details → submit → confirmation screen, with only `POST /contribute` stubbed (the two `GET`s hit the real, read-only API)
+- [x] E2E happy path (Playwright) — `e2e/donation-flow.spec.ts`: general donation → preset amount → fill details → confirm & consent → submit → confirmation screen, with only `POST /contribute` stubbed (the two `GET`s hit the real, read-only API). Updated in Phase 1.5 for the new 3-step flow and field-label copy; both specs still pass.
 - [ ] E2E validation scenario: empty required fields → errors, cannot advance — **not done as a distinct test.** The current e2e suite has the happy path plus an API-level `ERROR`-message scenario, but nothing exercising client-side "submit with empty/invalid fields → blocked, errors shown."
 
 > 📍 **Commit:** `test: e2e happy path and validation scenario (Playwright)` (not yet made — validation scenario missing)
@@ -228,15 +241,15 @@ Base URL: `https://frontend-assignment-api.goodrequest.dev`, endpoints per [open
 - [x] `npm run build` — passes, no TS errors; no `any` used anywhere in the new code
 - [x] `npm run test` and `npm run test:e2e` — green (28 unit/component tests, 3 e2e tests)
 - [ ] README: project description, how to run it, decisions and deviations from the assignment — **not done**; `README.md` is still the default `create-next-app` boilerplate
-- [ ] Manual walkthrough of the whole flow in the browser (mobile + desktop) — 🟡 **desktop only.** Full flow (help type → shelter picker validation → amount presets/custom → multi-donor add/remove → field validation → phone/consent) was walked through manually via the browser tool at desktop width; the actual final submission was deliberately **not** clicked for real (it would POST a real donation into the assignment's shared live database) — that path is instead covered by unit tests + the stubbed e2e tests. A mobile-viewport resize was attempted but didn't visibly change the render in this session, so mobile has not actually been eyeballed.
-- [ ] Final visual side-by-side comparison of every screen against Figma, assets included — **not done** (Phase 1.5 skipped)
+- [x] Manual walkthrough of the whole flow in the browser (mobile + desktop) — **done in Phase 1.5**, at both desktop (1440px) and mobile (390px) widths via the Chrome browser tool. Full flow (shelter step → personal details → confirm & consent) was walked through with the confirm-step summary verified against the entered data; the actual final submission was deliberately **not** clicked for real (it would POST a real donation into the assignment's shared live database) — that path is instead covered by unit tests + the stubbed e2e tests.
+- [x] Final visual side-by-side comparison of every screen against Figma, assets included — **done** as part of Phase 1.5
 
 ---
 
 ## Open questions / decisions
 
 - [x] How to map the optional first name onto the required `firstName` in the API payload — **resolved:** `firstName: name ?? ""` in `toContributeBody` (`src/services/shelters.ts`)
-- [ ] Exact preset amount values and copy — **still open/placeholder.** Shipped with 5 / 10 / 25 / 50 € as reasonable defaults, not taken from Figma.
+- [x] Exact preset amount values and copy — **resolved in Phase 1.5.** Figma specifies `5 / 10 / 20 / 30 / 50 / 100 €`; the app now uses those instead of the earlier 5/10/25/50 placeholder guess.
 - [x] Phone format sent to the API (`+421 900 000 000` vs. the `0900 000 000` example in the spec) — **resolved:** the app sends the full international format with country code, e.g. `"+421 900 123 456"` (matches the `skCzPhoneSchema` regex the form validates against), not the local `0900 000 000` style from the OpenAPI example.
 - [x] Should the app's language be Slovak or English? — **resolved:** neither exclusively — the app is now localized with `next-intl` (Slovak default, English switchable), which resolves Phase 3's "Slovak error messages" item and doubles as the Phase 9 i18n bonus. See Phase 9 for the full implementation.
 - [ ] **New open question:** should API responses be runtime-validated with Zod (`safeParse`), as both this plan and the `api-integration`/`zod-validation` skills recommend, or is compile-time typing considered sufficient for these 3 read/write endpoints?

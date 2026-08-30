@@ -5,7 +5,6 @@ import { Controller, useFieldArray } from "react-hook-form";
 import { Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Field,
   FieldError,
@@ -110,25 +109,6 @@ export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
                 />
                 <FieldError errors={[errors?.phone]} />
               </Field>
-
-              <Field orientation="horizontal" data-invalid={!!errors?.consent}>
-                <FieldLabel htmlFor={`contributors.${index}.consent`} className="items-start">
-                  <Controller
-                    control={form.control}
-                    name={`contributors.${index}.consent`}
-                    render={({ field: consentField }) => (
-                      <Checkbox
-                        id={`contributors.${index}.consent`}
-                        checked={consentField.value}
-                        onCheckedChange={(checked) => consentField.onChange(checked === true)}
-                        aria-invalid={!!errors?.consent}
-                      />
-                    )}
-                  />
-                  <span>{t("consentLabel")}</span>
-                </FieldLabel>
-                <FieldError errors={[errors?.consent]} />
-              </Field>
             </FieldSet>
           </div>
         );
@@ -138,9 +118,7 @@ export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
         type="button"
         variant="outline"
         size="sm"
-        onClick={() =>
-          append({ name: "", surname: "", email: "", phone: "", consent: false })
-        }
+        onClick={() => append({ name: "", surname: "", email: "", phone: "" })}
       >
         <Plus /> {t("addDonor")}
       </Button>

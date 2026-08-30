@@ -18,19 +18,19 @@ test("happy path: general donation, preset amount, submit succeeds", async ({ pa
 
   await page.goto("/");
 
-  // Step 1: help type — General donation is the default, just continue.
-  await page.getByRole("button", { name: "Pokračovať" }).click();
-
-  // Step 2: amount — pick a preset.
+  // Step 1: help type, shelter (optional) and amount are all on one screen —
+  // general donation is the default, just pick a preset amount.
   await page.getByRole("radio", { name: "10 eur" }).click();
   await page.getByRole("button", { name: "Pokračovať" }).click();
 
-  // Step 3: personal details.
+  // Step 2: personal details.
   await page.getByLabel("Priezvisko").fill("Testovaci");
-  await page.getByLabel("E-mail").fill("donor@example.com");
-  await page.getByLabel("Telefón").fill("900 123 456");
-  await page.getByRole("checkbox", { name: /súhlasím/i }).check();
+  await page.getByLabel("E-mailová adresa").fill("donor@example.com");
+  await page.getByLabel("Telefónne číslo").fill("900 123 456");
+  await page.getByRole("button", { name: "Pokračovať" }).click();
 
+  // Step 3: confirmation — review summary and consent.
+  await page.getByRole("checkbox", { name: /súhlasím/i }).check();
   await page.getByRole("button", { name: "Prispieť" }).click();
 
   await expect(page.getByText("Ďakujeme za váš príspevok!")).toBeVisible();
@@ -50,13 +50,14 @@ test("submission surfaces an ERROR message from the API instead of succeeding", 
   });
 
   await page.goto("/");
-  await page.getByRole("button", { name: "Pokračovať" }).click();
   await page.getByRole("radio", { name: "10 eur" }).click();
   await page.getByRole("button", { name: "Pokračovať" }).click();
 
   await page.getByLabel("Priezvisko").fill("Testovaci");
-  await page.getByLabel("E-mail").fill("donor@example.com");
-  await page.getByLabel("Telefón").fill("900 123 456");
+  await page.getByLabel("E-mailová adresa").fill("donor@example.com");
+  await page.getByLabel("Telefónne číslo").fill("900 123 456");
+  await page.getByRole("button", { name: "Pokračovať" }).click();
+
   await page.getByRole("checkbox", { name: /súhlasím/i }).check();
   await page.getByRole("button", { name: "Prispieť" }).click();
 

@@ -15,15 +15,15 @@ export function SuccessStep({ messages, onDonateAgain }: SuccessStepProps) {
   const t = useTranslations("success");
 
   return (
-    <div className="flex flex-col items-center gap-4 py-6 text-center">
+    <div className="flex flex-1 flex-col items-center justify-center gap-6 py-10 text-center">
       <CheckCircle2 className="size-12 text-primary" aria-hidden="true" />
-      <h2 className="text-lg font-semibold">{t("heading")}</h2>
-      <ul className="flex flex-col gap-1 text-sm text-muted-foreground">
+      <h1 className="text-heading-lg font-bold text-foreground">{t("heading")}</h1>
+      <ul className="flex flex-col gap-1 text-base text-secondary-foreground">
         {messages.map((message, index) => (
           <li key={index}>{message.message}</li>
         ))}
       </ul>
-      <Button type="button" onClick={onDonateAgain}>
+      <Button type="button" size="xl" onClick={onDonateAgain}>
         {t("donateAgain")}
       </Button>
     </div>
