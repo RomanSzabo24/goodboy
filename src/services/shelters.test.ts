@@ -1,8 +1,15 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { getContributeError, toContributeBody } from "./shelters";
+import { getContributeError, getShelters, postContribute, toContributeBody } from "./shelters";
 import type { ContributeResponse } from "./shelters";
 import type { DonationFormValues } from "@/lib/validations/donation";
+
+function mockFetchResponseOnce(body: unknown, ok = true) {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn().mockResolvedValue({ ok, status: ok ? 200 : 500, json: () => Promise.resolve(body) }),
+  );
+}
 
 describe("toContributeBody", () => {
   const baseValues: DonationFormValues = {
@@ -30,6 +37,31 @@ describe("toContributeBody", () => {
     expect(body.contributors).toEqual([
       { firstName: "", lastName: "Dobry", email: "jan@example.com", phone: "+421 900 000 000" },
     ]);
+  });
+});
+
+describe("response validation", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("returns parsed data for a well-formed shelters response", async () => {
+    mockFetchResponseOnce({ shelters: [{ id: 1, name: "Útulok Košice" }] });
+    await expect(getShelters()).resolves.toEqual({
+      shelters: [{ id: 1, name: "Útulok Košice" }],
+    });
+  });
+
+  it("throws when the shelters response doesn't match the API schema", async () => {
+    mockFetchResponseOnce({ shelters: [{ id: "not-a-number" }] });
+    await expect(getShelters()).rejects.toThrow(/Invalid shelters response/);
+  });
+
+  it("throws when the contribute response doesn't match the API schema", async () => {
+    mockFetchResponseOnce({ messages: [{ message: "ok", type: "NOT_A_REAL_TYPE" }] });
+    await expect(
+      postContribute({ contributors: [], value: 10 }),
+    ).rejects.toThrow(/Invalid contribute response/);
   });
 });
 

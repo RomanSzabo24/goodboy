@@ -1,15 +1,21 @@
+import {
+  contributeResponseSchema,
+  resultsResponseSchema,
+  sheltersResponseSchema,
+} from "@/lib/validations/api";
+import type {
+  ContributeMessage,
+  ContributeResponse,
+  ResultsResponse,
+  Shelter,
+  SheltersResponse,
+} from "@/lib/validations/api";
 import type { DonationFormValues } from "@/lib/validations/donation";
+
+export type { ContributeMessage, ContributeResponse, ResultsResponse, Shelter, SheltersResponse };
 
 const BASE_URL = "https://frontend-assignment-api.goodrequest.dev";
 
-export type Shelter = { id: number; name: string };
-export type SheltersResponse = { shelters: Shelter[] };
-export type ResultsResponse = { contributors: number; contribution: number | null };
-export type ContributeMessage = {
-  message: string;
-  type: "ERROR" | "WARNING" | "INFO" | "SUCCESS";
-};
-export type ContributeResponse = { messages: ContributeMessage[] };
 export type ContributeBody = {
   contributors: { firstName: string; lastName: string; email: string; phone?: string | null }[];
   shelterID?: number | null;
@@ -21,7 +27,9 @@ export async function getShelters(search?: string): Promise<SheltersResponse> {
   if (search) url.searchParams.set("search", search);
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Failed to fetch shelters: ${res.status}`);
-  return res.json();
+  const result = sheltersResponseSchema.safeParse(await res.json());
+  if (!result.success) throw new Error(`Invalid shelters response: ${result.error.message}`);
+  return result.data;
 }
 
 export async function getSheltersResults(search?: string): Promise<ResultsResponse> {
@@ -29,7 +37,9 @@ export async function getSheltersResults(search?: string): Promise<ResultsRespon
   if (search) url.searchParams.set("search", search);
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Failed to fetch results: ${res.status}`);
-  return res.json();
+  const result = resultsResponseSchema.safeParse(await res.json());
+  if (!result.success) throw new Error(`Invalid results response: ${result.error.message}`);
+  return result.data;
 }
 
 export async function postContribute(body: ContributeBody): Promise<ContributeResponse> {
@@ -39,7 +49,9 @@ export async function postContribute(body: ContributeBody): Promise<ContributeRe
     body: JSON.stringify(body),
   });
   if (!res.ok) throw new Error(`Failed to submit contribution: ${res.status}`);
-  return res.json();
+  const result = contributeResponseSchema.safeParse(await res.json());
+  if (!result.success) throw new Error(`Invalid contribute response: ${result.error.message}`);
+  return result.data;
 }
 
 /**

@@ -18,7 +18,7 @@
 | 0 | Dependency & tooling setup | ✅ 6 / 6 |
 | 1 | Base structure and providers | 🟡 4 / 5 |
 | 1.5 | Figma: assets, tokens and components | ✅ 9 / 9 |
-| 2 | Data layer (services + Zod + Query hooks) | 🟡 3 / 7 (restructured — see notes) |
+| 2 | Data layer (services + Zod + Query hooks) | 🟡 4 / 7 (restructured — see notes) |
 | 3 | Form validation schemas | ✅ 7 / 7 |
 | 4 | Form state (Zustand + RHF) | ✅ 4 / 4 (with noted deviations) |
 | 5 | UI — form steps (restructured — see notes) | 🟡 10 / 12 |
@@ -100,8 +100,8 @@
 Base URL: `https://frontend-assignment-api.goodrequest.dev`, endpoints per [openapi.json](../input/openapi.json).
 
 - [ ] `src/lib/api-client.ts` — **not created as a separate file.** The three `fetch` calls live directly in `src/services/shelters.ts` (`getShelters`, `getSheltersResults`, `postContribute`), each throwing a plain `Error` on a non-`ok` response. There is no shared/typed `ApiError` or a single fetch-wrapper abstraction — acceptable for 3 endpoints, but would need extracting if the API surface grows.
-- [ ] `src/lib/validations/api.ts` — **not created.** Response shapes (`SheltersResponse`, `ResultsResponse`, `ContributeResponse`) are plain hand-written TypeScript `type`s in `src/services/shelters.ts`, not Zod schemas, so API responses are **not runtime-validated** via `safeParse` anywhere. This is a real gap vs. both this plan and the `api-integration`/`zod-validation` skills' guidance ("never a type assertion... parse it through a Zod schema"). Flagged as a follow-up.
-- [x] `src/services/shelters.ts` — `getShelters(search?)`, `getSheltersResults(search?)`, `postContribute(body)`, plus `toContributeBody()` (form → API payload mapping) and `getContributeError()` (extracts the first `ERROR` message from `messages[]`) — **deviation:** no `safeParse` (see above)
+- [x] `src/lib/validations/api.ts` — **done.** `shelterSchema`/`sheltersResponseSchema`/`resultsResponseSchema`/`contributeMessageSchema`/`contributeResponseSchema`, mirroring `docs/input/openapi.json` exactly (`contribution` nullable, message `type` as a 4-value enum). `Shelter`/`SheltersResponse`/`ResultsResponse`/`ContributeMessage`/`ContributeResponse` are now `z.infer`'d from these instead of hand-written, then re-exported from `src/services/shelters.ts` so none of the 9 existing consumer files needed to change their imports. Unit-tested in `src/lib/validations/api.test.ts` (valid shapes, a null `contribution`, a rejected unknown message type, a rejected malformed shelter).
+- [x] `src/services/shelters.ts` — `getShelters(search?)`, `getSheltersResults(search?)`, `postContribute(body)`, plus `toContributeBody()` (form → API payload mapping) and `getContributeError()` (extracts the first `ERROR` message from `messages[]`) — **resolved:** each function now parses its JSON body through the matching schema via `safeParse` and throws a descriptive `Error` on a shape mismatch, on top of the existing non-`ok` check. Covered in `src/services/shelters.test.ts` (`response validation` block, mocked `fetch`) — a well-formed response round-trips, a malformed one throws `Invalid <endpoint> response`.
 - [x] `src/hooks/use-shelters.ts` — contains **all three** hooks (`useShelters`, `useSheltersResults`, `useContribute`) in one file with a shared `sheltersKeys` query-key factory, rather than the three separate files the plan sketched (`use-shelters.ts` / `use-results.ts` / `use-contribute.ts`). Kept together because they share the same key factory and it's a small surface; split them out if the hooks grow.
 - [ ] `src/hooks/use-results.ts` — merged into `use-shelters.ts` (see above)
 - [ ] `src/hooks/use-contribute.ts` — merged into `use-shelters.ts` (see above)
@@ -109,7 +109,7 @@ Base URL: `https://frontend-assignment-api.goodrequest.dev`, endpoints per [open
 
 **Note:** the optional-first-name-vs-required-`firstName` mismatch (see Open questions) is resolved in `toContributeBody`: `firstName: name ?? ""`.
 
-> 📍 **Commit:** `feat: data layer - api client, response schemas, query hooks` (not yet made — and per the gaps above, doesn't fully match its own name yet: no dedicated api-client, no response schemas)
+> 📍 **Commit:** `feat: validate API responses against Zod schemas` (not yet made — this pass only closes the response-validation gap; the dedicated `api-client.ts` extraction is still deliberately deferred, see above)
 
 ---
 
@@ -252,4 +252,4 @@ Base URL: `https://frontend-assignment-api.goodrequest.dev`, endpoints per [open
 - [x] Exact preset amount values and copy — **resolved in Phase 1.5.** Figma specifies `5 / 10 / 20 / 30 / 50 / 100 €`; the app now uses those instead of the earlier 5/10/25/50 placeholder guess.
 - [x] Phone format sent to the API (`+421 900 000 000` vs. the `0900 000 000` example in the spec) — **resolved:** the app sends the full international format with country code, e.g. `"+421 900 123 456"` (matches the `skCzPhoneSchema` regex the form validates against), not the local `0900 000 000` style from the OpenAPI example.
 - [x] Should the app's language be Slovak or English? — **resolved:** neither exclusively — the app is now localized with `next-intl` (Slovak default, English switchable), which resolves Phase 3's "Slovak error messages" item and doubles as the Phase 9 i18n bonus. See Phase 9 for the full implementation.
-- [ ] **New open question:** should API responses be runtime-validated with Zod (`safeParse`), as both this plan and the `api-integration`/`zod-validation` skills recommend, or is compile-time typing considered sufficient for these 3 read/write endpoints?
+- [x] Should API responses be runtime-validated with Zod (`safeParse`), as both this plan and the `api-integration`/`zod-validation` skills recommend, or is compile-time typing considered sufficient for these 3 read/write endpoints? — **resolved:** validate. `src/lib/validations/api.ts` now covers all 3 responses (Phase 2).
