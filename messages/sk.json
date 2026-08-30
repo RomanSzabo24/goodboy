@@ -23,7 +23,6 @@
     "donate": "Prispieť",
     "submitting": "Odosielanie…",
     "submitError": "Pri odosielaní vášho príspevku sa niečo pokazilo. Skúste to prosím znova.",
-    "errorSummaryTitle": "{count, plural, one {# chyba} few {# chyby} other {# chýb}} vo formulári",
     "heading": {
       "shelter": "Vyberte si možnosť, ako chcete pomôcť",
       "details": "Potrebujeme od Vás zopár informácií",

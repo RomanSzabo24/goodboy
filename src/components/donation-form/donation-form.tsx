@@ -9,13 +9,11 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { ConfirmStep } from "@/components/donation-form/confirm-step";
-import { ErrorSummary } from "@/components/donation-form/error-summary";
 import { PersonalDetailsStep } from "@/components/donation-form/personal-details-step";
 import { ShelterStep } from "@/components/donation-form/shelter-step";
 import { StepIndicator } from "@/components/donation-form/step-indicator";
 import { SuccessStep } from "@/components/donation-form/success-step";
 import { useContribute } from "@/hooks/use-shelters";
-import { flattenFieldErrors, getFieldErrorMessages } from "@/lib/form-errors";
 import {
   DONATION_STEPS,
   useDonationFormStore,
@@ -78,25 +76,6 @@ export function DonationForm({ shelters }: { shelters: Shelter[] }) {
   const stepIndex = DONATION_STEPS.indexOf(step);
   const [successMessages, setSuccessMessages] = useState<ContributeMessage[]>([]);
 
-  // "On submit attempt" for the current step: only starts surfacing an
-  // aggregated summary once the user has actually tried to advance/submit
-  // *this* step, then stays live so it shrinks/clears as errors get fixed.
-  // Tracking the attempted step (rather than a plain boolean reset in an
-  // effect) means navigating away clears it for free — it just stops
-  // matching `step`.
-  const [attemptedStep, setAttemptedStep] = useState<string | null>(null);
-  const attempted = attemptedStep === step;
-
-  const errors = form.formState.errors;
-  const errorMessages = useMemo(() => {
-    if (!attempted) return [];
-    // The confirm step re-validates the whole schema on submit, so its
-    // summary should cover every outstanding error, not just its own fields.
-    return step === "confirm"
-      ? flattenFieldErrors(errors)
-      : getFieldErrorMessages(errors, STEP_FIELDS[step]);
-  }, [attempted, errors, step]);
-
   // Every control that can be invalid also gets `aria-invalid`, so after a
   // failed validation attempt the first offending control can always be
   // found generically instead of maintaining a per-step ref map.
@@ -128,7 +107,6 @@ export function DonationForm({ shelters }: { shelters: Shelter[] }) {
   }, [step]);
 
   async function handleNext() {
-    setAttemptedStep(step);
     const valid = await form.trigger(STEP_FIELDS[step]);
     if (valid) {
       goNext();
@@ -180,8 +158,6 @@ export function DonationForm({ shelters }: { shelters: Shelter[] }) {
         {t(`heading.${step}`)}
       </h1>
 
-      <ErrorSummary messages={errorMessages} />
-
       <div ref={stepContentRef} className="contents">
         {step === "shelter" && (
           <ShelterStep form={form} shelters={shelters} className={STEP_TRANSITION_CLASS} />
@@ -212,7 +188,6 @@ export function DonationForm({ shelters }: { shelters: Shelter[] }) {
             size="xl"
             disabled={contribute.isPending}
             onClick={(event) => {
-              setAttemptedStep(step);
               void form.handleSubmit(handleSubmit, () => {
                 requestAnimationFrame(focusFirstInvalidField);
               })(event);

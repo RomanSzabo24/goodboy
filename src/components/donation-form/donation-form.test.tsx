@@ -38,9 +38,9 @@ describe("DonationForm step navigation", () => {
     await user.clear(amountInput);
     await user.click(screen.getByRole("button", { name: "Continue" }));
 
-    // Still on the shelter step: its error is shown (once in the summary,
-    // once inline on the field) and its controls remain.
-    expect(await screen.findAllByText("Enter a donation amount")).toHaveLength(2);
+    // Still on the shelter step: its inline field error is shown and its
+    // controls remain.
+    expect(await screen.findByText("Enter a donation amount")).toBeInTheDocument();
     expect(screen.getByRole("radio", { name: "20 euros" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Add another donor" })).not.toBeInTheDocument();
 

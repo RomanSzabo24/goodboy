@@ -83,8 +83,7 @@ test("empty required fields block navigation and show inline errors on every ste
   await page.goto("/");
 
   // Step 1: amount defaults to 0 — continuing without picking one must stay
-  // on this step and show the field's own error (matched by id, since the
-  // same message is also echoed in the aggregated error summary above it).
+  // on this step and show the field's own error (matched by id).
   await page.getByRole("button", { name: "Pokračovať" }).click();
   await expect(page.locator('[id="amount-error"]')).toHaveText("Suma musí byť väčšia ako 0");
   await expect(
