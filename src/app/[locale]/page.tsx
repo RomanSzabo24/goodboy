@@ -27,7 +27,10 @@ export default async function Home({
         <SiteFooter />
       </div>
 
-      <div className="relative my-5 hidden w-[602px] shrink-0 overflow-hidden rounded-[20px] lg:block">
+      {/* Fixed to the viewport height and sticky so the photo stays put
+          while a long donor list scrolls the content column past it,
+          instead of stretching to match that column and scrolling with it. */}
+      <div className="relative my-5 hidden w-[602px] shrink-0 overflow-hidden rounded-[20px] lg:sticky lg:top-5 lg:block lg:h-[calc(100vh-2.5rem)]">
         <Image
           src="/images/hero-dog-beach.png"
           alt=""

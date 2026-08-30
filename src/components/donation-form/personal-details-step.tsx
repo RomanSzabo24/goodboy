@@ -37,7 +37,17 @@ export function PersonalDetailsStep({ form, className }: PersonalDetailsStepProp
   // Rows that are correctly filled in and shown as a collapsed summary
   // instead of the full editable form. Keyed by useFieldArray's stable
   // field.id so it survives rows being added/removed at other indices.
-  const [collapsedIds, setCollapsedIds] = useState<Set<string>>(new Set());
+  // This step unmounts on every step change, so on mount (e.g. navigating
+  // back from Confirm) any row that's already valid starts collapsed
+  // instead of re-expanding the whole form.
+  const [collapsedIds, setCollapsedIds] = useState<Set<string>>(
+    () =>
+      new Set(
+        fields
+          .filter((field, index) => contributorSchema.safeParse(contributors[index]).success)
+          .map((field) => field.id),
+      ),
+  );
 
   // Every row not already collapsed must be correctly filled in before
   // another donor can be added — otherwise the form keeps growing with

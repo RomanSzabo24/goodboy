@@ -148,7 +148,7 @@ export function DonationForm({ shelters }: { shelters: Shelter[] }) {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-10 lg:gap-6">
+    <div className="flex flex-1 flex-col gap-10 lg:h-[calc(100vh-4rem)] lg:gap-6">
       <StepIndicator currentIndex={stepIndex} />
       <h1
         ref={headingRef}
@@ -158,7 +158,19 @@ export function DonationForm({ shelters }: { shelters: Shelter[] }) {
         {t(`heading.${step}`)}
       </h1>
 
-      <div ref={stepContentRef} className="contents">
+      {/* Bounded to the space left over from the heading/buttons on desktop
+          (min-h-0 lets a flex child actually shrink to that size instead of
+          growing past it) and scrollable within itself, so a long donor
+          list scrolls in place instead of growing the whole page — the
+          heading, step indicator, and nav buttons never move.
+          Setting overflow-y also forces overflow-x to auto (CSS can't mix
+          visible with a non-visible axis), which would otherwise clip
+          focused inputs' rings at the container's edges; the matching
+          -mx-1/px-1 reclaims that space without shifting the content. */}
+      <div
+        ref={stepContentRef}
+        className="lg:-mx-1 lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:px-1"
+      >
         {step === "shelter" && (
           <ShelterStep form={form} shelters={shelters} className={STEP_TRANSITION_CLASS} />
         )}
