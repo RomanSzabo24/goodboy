@@ -153,7 +153,7 @@ export function DonationForm({ shelters }: { shelters: Shelter[] }) {
       <h1
         ref={headingRef}
         tabIndex={-1}
-        className="w-full text-heading-lg font-bold text-foreground outline-none"
+        className="w-full text-3xl font-bold text-foreground outline-none sm:text-4xl lg:text-heading-lg"
       >
         {t(`heading.${step}`)}
       </h1>
