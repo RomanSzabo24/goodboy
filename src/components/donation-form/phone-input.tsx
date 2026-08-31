@@ -40,6 +40,7 @@ export function PhoneInput({ id, value, onChange, onBlur, ...props }: PhoneInput
   return (
     <div className="flex gap-4">
       <Select
+        name={id ? `${id}-country-code` : undefined}
         value={prefix}
         onValueChange={(nextPrefix) => onChange(`${nextPrefix} ${national}`.trim())}
       >

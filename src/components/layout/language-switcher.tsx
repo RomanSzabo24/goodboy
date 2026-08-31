@@ -27,6 +27,7 @@ export function LanguageSwitcher() {
 
   return (
     <Select
+      name="locale"
       value={locale}
       onValueChange={(nextLocale) => {
         startTransition(() => {
