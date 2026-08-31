@@ -14,6 +14,7 @@ import { ShelterStep } from "@/components/donation-form/shelter-step";
 import { StepIndicator } from "@/components/donation-form/step-indicator";
 import { SuccessStep } from "@/components/donation-form/success-step";
 import { useContribute } from "@/hooks/use-shelters";
+import { cn } from "@/lib/utils";
 import {
   DONATION_STEPS,
   useDonationFormStore,
@@ -159,7 +160,12 @@ export function DonationForm({ shelters }: { shelters: Shelter[] }) {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-10 lg:h-[calc(100vh-4rem)] lg:gap-6">
+    <div
+      className={cn(
+        "flex flex-1 flex-col gap-10 lg:gap-6",
+        step !== "confirm" && "lg:h-[calc(100vh-4rem)]",
+      )}
+    >
       <StepIndicator currentIndex={stepIndex} />
       <h1
         ref={headingRef}
@@ -177,10 +183,17 @@ export function DonationForm({ shelters }: { shelters: Shelter[] }) {
           Setting overflow-y also forces overflow-x to auto (CSS can't mix
           visible with a non-visible axis), which would otherwise clip
           focused inputs' rings at the container's edges; the matching
-          -mx-1/px-1 reclaims that space without shifting the content. */}
+          -mx-1/px-1 reclaims that space without shifting the content.
+          Skipped on the confirm step: with many contributors its summary
+          can outgrow that bounded box, and a fixed-height inner scroll
+          nested inside the page's own scroll reads as two scrollbars —
+          confirm just grows the page like every other step instead. */}
       <div
         ref={stepContentRef}
-        className="lg:-mx-1 lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:px-1"
+        className={cn(
+          "lg:-mx-1 lg:px-1",
+          step !== "confirm" && "lg:min-h-0 lg:flex-1 lg:overflow-y-auto",
+        )}
       >
         {step === "shelter" && (
           <ShelterStep form={form} shelters={shelters} className={STEP_TRANSITION_CLASS} />

@@ -43,7 +43,7 @@ export function ShelterStep({ form, shelters, className }: ShelterStepProps) {
     : "";
 
   return (
-    <FieldSet className={cn("gap-10 lg:gap-6", className)}>
+    <FieldSet className={cn("gap-10 xl:gap-6", className)}>
       <Controller
         control={form.control}
         name="helpType"
@@ -128,7 +128,7 @@ export function ShelterStep({ form, shelters, className }: ShelterStepProps) {
         </FieldLabel>
         <FieldDescription>{tAmount("description")}</FieldDescription>
 
-        <div className="flex w-full flex-col items-center gap-10 lg:gap-6">
+        <div className="flex w-full flex-col items-center gap-10 xl:gap-6">
           <div className="flex items-center gap-2 border-b-2 border-primary px-8 py-2.5">
             <input
               id="amount"

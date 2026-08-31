@@ -30,13 +30,13 @@ export default async function Home({
       {/* Fixed to the viewport height and sticky so the photo stays put
           while a long donor list scrolls the content column past it,
           instead of stretching to match that column and scrolling with it. */}
-      <div className="my-5 hidden w-[602px] shrink-0 lg:sticky lg:top-5 lg:block lg:h-[calc(100vh-2.5rem)]">
+      <div className="my-5 hidden w-[360px] shrink-0 lg:sticky lg:top-5 lg:block lg:h-[calc(100vh-2.5rem)] xl:w-[602px]">
         <div className="relative h-full w-full overflow-hidden rounded-[20px]">
           <Image
             src="/images/hero-dog-beach.png"
             alt=""
             fill
-            sizes="602px"
+            sizes="(min-width: 1280px) 602px, 360px"
             className="object-cover"
             priority
           />
