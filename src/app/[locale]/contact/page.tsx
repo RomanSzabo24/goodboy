@@ -67,7 +67,7 @@ export default async function ContactPage({
         <div className="flex w-full flex-wrap items-start justify-center gap-x-8 gap-y-16 py-5">
           {cards.map((card) => (
             <div key={card.title} className="flex min-w-60 flex-1 flex-col items-center gap-5">
-              <Image src={card.icon} alt="" width={48} height={48} />
+              <Image src={card.icon} alt="" width={48} height={48} style={{ aspectRatio: "1 / 1" }} />
               <div className="flex flex-col items-center gap-2 text-center">
                 <p className="text-xl font-semibold text-foreground">{card.title}</p>
                 <p className="text-base text-secondary-foreground">{card.supporting}</p>
@@ -90,6 +90,7 @@ export default async function ContactPage({
             fill
             sizes="(min-width: 1280px) 1120px, 100vw"
             className="object-cover"
+            style={{ aspectRatio: "1120 / 376" }}
           />
         </div>
       </div>

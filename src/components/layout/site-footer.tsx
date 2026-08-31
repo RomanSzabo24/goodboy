@@ -26,7 +26,13 @@ export async function SiteFooter({ className }: { className?: string }) {
       )}
     >
       <Link href="/" className="flex items-center">
-        <Image src="/images/logo.png" alt="GoodBoy Foundation" width={124} height={32} />
+        <Image
+          src="/images/logo.png"
+          alt="GoodBoy Foundation"
+          width={124}
+          height={32}
+          style={{ aspectRatio: "124 / 32" }}
+        />
       </Link>
       <div className="flex flex-col flex-wrap items-center gap-x-8 gap-y-4 sm:flex-row">
         <ul className="flex items-center gap-4">
@@ -39,7 +45,14 @@ export async function SiteFooter({ className }: { className?: string }) {
                 aria-label={social.label}
                 className="inline-flex transition-opacity hover:opacity-70"
               >
-                <Image src={social.icon} alt="" width={16} height={16} aria-hidden="true" />
+                <Image
+                  src={social.icon}
+                  alt=""
+                  width={16}
+                  height={16}
+                  aria-hidden="true"
+                  style={{ aspectRatio: "1 / 1" }}
+                />
               </a>
             </li>
           ))}

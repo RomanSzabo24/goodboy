@@ -45,7 +45,14 @@ export function PhoneInput({ id, value, onChange, onBlur, ...props }: PhoneInput
       >
         <SelectTrigger className="w-20 shrink-0 justify-center" aria-label={t("countryCodeAriaLabel")}>
           <SelectValue>
-            <Image src={selectedCountry.flag} alt="" width={20} height={20} aria-hidden="true" />
+            <Image
+              src={selectedCountry.flag}
+              alt=""
+              width={20}
+              height={20}
+              aria-hidden="true"
+              style={{ aspectRatio: "1 / 1" }}
+            />
             <span className="sr-only">
               {selectedCountry.code} ({t(selectedCountry.labelKey)})
             </span>
@@ -54,7 +61,14 @@ export function PhoneInput({ id, value, onChange, onBlur, ...props }: PhoneInput
         <SelectContent>
           {COUNTRY_CODES.map((country) => (
             <SelectItem key={country.code} value={country.code}>
-              <Image src={country.flag} alt="" width={20} height={20} aria-hidden="true" />
+              <Image
+                src={country.flag}
+                alt=""
+                width={20}
+                height={20}
+                aria-hidden="true"
+                style={{ aspectRatio: "1 / 1" }}
+              />
               {country.code}
               <span className="sr-only">{t(country.labelKey)}</span>
             </SelectItem>
