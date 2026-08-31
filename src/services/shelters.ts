@@ -71,7 +71,11 @@ export function toContributeBody(values: DonationFormValues): ContributeBody {
       email,
       phone,
     })),
-    shelterID: values.helpType === "GIFT_SHELTER" ? values.shelterId : null,
+    // The shelter picker stays available (and optional) for a general
+    // donation too — send whatever was actually chosen rather than gating
+    // on helpType, so a shelter picked during a general donation still
+    // reaches the API instead of being silently dropped.
+    shelterID: values.shelterId ?? null,
     value: values.amount,
   };
 }

@@ -21,7 +21,7 @@ describe("toContributeBody", () => {
     consent: true,
   };
 
-  it("maps GIFT_FOUNDATION to a null shelterID", () => {
+  it("maps a general donation with no shelter chosen to a null shelterID", () => {
     const body = toContributeBody(baseValues);
     expect(body.shelterID).toBeNull();
     expect(body.value).toBe(15);
@@ -29,6 +29,11 @@ describe("toContributeBody", () => {
 
   it("maps GIFT_SHELTER to the chosen shelterID", () => {
     const body = toContributeBody({ ...baseValues, helpType: "GIFT_SHELTER", shelterId: 4 });
+    expect(body.shelterID).toBe(4);
+  });
+
+  it("still sends a shelterID chosen during a general donation — the picker stays optional, not exclusive to GIFT_SHELTER", () => {
+    const body = toContributeBody({ ...baseValues, helpType: "GIFT_FOUNDATION", shelterId: 4 });
     expect(body.shelterID).toBe(4);
   });
 

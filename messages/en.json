@@ -38,7 +38,7 @@
   "form": {
     "back": "Back",
     "continue": "Continue",
-    "donate": "Donate",
+    "donate": "Submit form",
     "submitting": "Submitting…",
     "submitError": "Something went wrong while submitting your donation. Please try again.",
     "heading": {

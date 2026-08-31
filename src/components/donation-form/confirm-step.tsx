@@ -43,9 +43,12 @@ export function ConfirmStep({ form, shelters, className }: ConfirmStepProps) {
         label={t("helpTypeLabel")}
         value={values.helpType === "GIFT_SHELTER" ? t("helpTypeShelterValue") : t("helpTypeFoundationValue")}
       />
-      {values.helpType === "GIFT_SHELTER" && shelterName && (
-        <SummaryRow label={t("shelterLabel")} value={shelterName} />
-      )}
+      {/* Shown whenever a shelter is actually chosen, not just for
+          GIFT_SHELTER — the shelter picker on step 1 stays available (and
+          optional) for a general donation too, so a donor can earmark a
+          preferred shelter without switching help types, and Figma's Step 3
+          shows the row in exactly that combination. */}
+      {shelterName && <SummaryRow label={t("shelterLabel")} value={shelterName} />}
       <SummaryRow label={t("amountLabel")} value={`${values.amount} €`} />
 
       <FieldSeparator />

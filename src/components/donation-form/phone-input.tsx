@@ -68,7 +68,16 @@ export function PhoneInput({ id, value, onChange, onBlur, ...props }: PhoneInput
         autoComplete="tel-national"
         placeholder={`${prefix} ${t("phonePlaceholder")}`}
         value={national}
-        onChange={(event) => onChange(`${prefix} ${event.target.value}`.trim())}
+        // Not `.trim()`ed: while typing, a group-separating space is always
+        // the last character in the string the instant it's pressed, so
+        // trimming here would strip it back out before the next digit ever
+        // lands next to it — the field would silently refuse "900 123 456"
+        // and collapse it to "900123456". Zod's `.trim()` in the schema
+        // still cleans up a stray leading/trailing space on submit.
+        onChange={(event) => {
+          const nextNational = event.target.value;
+          onChange(nextNational === "" ? prefix : `${prefix} ${nextNational}`);
+        }}
         onBlur={onBlur}
         {...props}
       />

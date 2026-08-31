@@ -31,7 +31,7 @@ test("happy path: general donation, preset amount, submit succeeds", async ({ pa
 
   // Step 3: confirmation — review summary and consent.
   await page.getByRole("checkbox", { name: /súhlasím/i }).check();
-  await page.getByRole("button", { name: "Prispieť" }).click();
+  await page.getByRole("button", { name: "Odoslať formulár" }).click();
 
   await expect(page.getByText("Ďakujeme za váš príspevok!")).toBeVisible();
 });
@@ -59,7 +59,7 @@ test("submission surfaces an ERROR message from the API instead of succeeding", 
   await page.getByRole("button", { name: "Pokračovať" }).click();
 
   await page.getByRole("checkbox", { name: /súhlasím/i }).check();
-  await page.getByRole("button", { name: "Prispieť" }).click();
+  await page.getByRole("button", { name: "Odoslať formulár" }).click();
 
   await expect(page.getByText("Something went wrong")).toBeVisible();
   await expect(page.getByText("Ďakujeme za váš príspevok!")).not.toBeVisible();
@@ -124,7 +124,7 @@ test("empty required fields block navigation and show inline errors on every ste
   await expect(page.getByRole("heading", { name: "Skontrolujte si zadané údaje" })).toBeVisible();
 
   // Step 3: submitting without checking consent must not call the API.
-  await page.getByRole("button", { name: "Prispieť" }).click();
+  await page.getByRole("button", { name: "Odoslať formulár" }).click();
   await expect(page.locator('[id="consent-error"]')).toHaveText(
     "Musíte súhlasiť so spracovaním osobných údajov",
   );
