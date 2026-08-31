@@ -8,7 +8,7 @@ Full original brief: [docs/input/assignment.md](docs/input/assignment.md). API d
 - **State Management:** 
   - Server state: TanStack Query v5 (`@tanstack/react-query`).
   - Client form state: `react-hook-form` v7 with `@hookform/resolvers` v3+.
-  - Shared UI/Multi-step state: Zustand v5.
+  - Shared UI/Multi-step state: React Context, with each wizard step as its own route (URL is the source of truth for current step) and form values held in a single `react-hook-form` instance shared via context.
 - **Validation:** Zod v4 schemas.
 - **API Base URL:** `https://frontend-assignment-api.goodrequest.dev`
 - **Testing:** Vitest + React Testing Library for unit/component tests, Playwright for e2e tests.
