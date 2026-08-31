@@ -217,7 +217,7 @@ function FieldError({
       role="alert"
       data-slot="field-error"
       className={cn(
-        "animate-in fade-in-0 slide-in-from-top-1 text-sm font-normal text-destructive duration-200",
+        "animate-in fade-in-0 slide-in-from-top-1 text-sm font-normal text-destructive duration-300",
         className
       )}
       {...props}

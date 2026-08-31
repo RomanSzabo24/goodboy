@@ -21,4 +21,4 @@ export function stepFromPathname(pathname: string): DonationStep {
 
 // Each step is a different route now, so it always fully mounts on
 // navigation — this entrance animation replays on every step change for free.
-export const STEP_TRANSITION_CLASS = "animate-in fade-in-0 slide-in-from-right-2 duration-300";
+export const STEP_TRANSITION_CLASS = "animate-in fade-in-0 slide-in-from-right-2 duration-700";

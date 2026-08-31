@@ -25,7 +25,7 @@ export function SuccessStep({ messages, onDonateAgain }: SuccessStepProps) {
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-6 py-10 text-center">
       <CheckCircle2
-        className="size-12 text-primary animate-in zoom-in-50 duration-500"
+        className="size-12 text-primary animate-in zoom-in-50 duration-700"
         aria-hidden="true"
       />
       <h1 ref={headingRef} tabIndex={-1} className="text-heading-lg font-bold text-foreground outline-none">

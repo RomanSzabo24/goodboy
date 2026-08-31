@@ -94,7 +94,7 @@ export function PersonalDetailsStep({ form, className }: PersonalDetailsStepProp
           return (
             <div key={field.id}>
               {index > 0 && <FieldSeparator className="mb-4" />}
-              <div className="flex items-start justify-between gap-4 rounded-lg border border-border p-4 animate-in fade-in-0 slide-in-from-top-1 duration-300">
+              <div className="flex items-start justify-between gap-4 rounded-lg border border-border p-4 animate-in fade-in-0 slide-in-from-top-1 duration-500">
                 <div className="flex flex-col gap-0.5">
                   <span className="text-sm font-medium text-foreground">{title}</span>
                   <span className="text-sm text-secondary-foreground">
@@ -127,7 +127,7 @@ export function PersonalDetailsStep({ form, className }: PersonalDetailsStepProp
         return (
           <div key={field.id}>
             {index > 0 && <FieldSeparator className="mb-4" />}
-            <FieldSet className="animate-in fade-in-0 slide-in-from-top-1 duration-300">
+            <FieldSet className="animate-in fade-in-0 slide-in-from-top-1 duration-500">
               <div className="flex items-center justify-between">
                 <FieldLegend variant="label">{title}</FieldLegend>
                 {fields.length > 1 && (

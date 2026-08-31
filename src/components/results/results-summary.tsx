@@ -41,7 +41,7 @@ export function ResultsSummary({ initialData }: { initialData: ResultsResponse }
                 the update without any layout shift. */}
             <p
               key={metric.value}
-              className="text-center text-heading-xl font-semibold text-primary animate-in fade-in-0 duration-500"
+              className="text-center text-heading-xl font-semibold text-primary animate-in fade-in-0 duration-700"
             >
               {metric.value}
             </p>
