@@ -108,7 +108,7 @@ export function ShelterStep({ form, shelters, className }: ShelterStepProps) {
                 >
                   <SelectValue placeholder={t("shelterPlaceholder")} />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent position="popper">
                   {shelters.map((shelter) => (
                     <SelectItem key={shelter.id} value={String(shelter.id)}>
                       {shelter.name}

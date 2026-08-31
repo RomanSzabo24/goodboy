@@ -21,14 +21,14 @@ export async function SiteFooter({ className }: { className?: string }) {
   return (
     <footer
       className={cn(
-        "flex w-full flex-wrap items-center justify-between gap-x-8 gap-y-4 border-t pt-6",
+        "flex w-full flex-col flex-wrap items-center justify-between gap-x-8 gap-y-4 border-t pt-6 sm:flex-row",
         className,
       )}
     >
       <Link href="/" className="flex items-center">
         <Image src="/images/logo.png" alt="GoodBoy Foundation" width={124} height={32} />
       </Link>
-      <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
+      <div className="flex flex-col flex-wrap items-center gap-x-8 gap-y-4 sm:flex-row">
         <ul className="flex items-center gap-4">
           {SOCIALS.map((social) => (
             <li key={social.label}>

@@ -41,7 +41,7 @@ export function LanguageSwitcher() {
       >
         <SelectValue />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent position="popper">
         {routing.locales.map((code) => (
           <SelectItem key={code} value={code}>
             {LOCALE_LABELS[code]}
