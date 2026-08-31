@@ -214,12 +214,19 @@ export function DonationWizardProvider({
                 of overflow-y-auto): the incoming step's `slide-in-from-right`
                 entrance animation starts translated past the right edge, which
                 briefly grows this element's scrollable width and flashes a
-                horizontal scrollbar on every step change without it. */}
+                horizontal scrollbar on every step change without it.
+                overflow-x-clip (not overflow-x-hidden) matters here: per the
+                CSS overflow spec, pairing overflow-x: hidden with an explicit
+                overflow-y: visible still computes the y-axis to auto, which
+                reintroduces the exact inner scrollbar confirm is meant to
+                skip — clip doesn't force that promotion, so visible sticks. */}
             <div
               ref={stepContentRef}
               className={cn(
-                "overflow-x-hidden lg:-mx-1 lg:px-1",
-                step !== "confirm" && "lg:min-h-0 lg:flex-1 lg:overflow-y-auto",
+                "overflow-x-clip lg:-mx-1 lg:px-1",
+                step !== "confirm"
+                  ? "lg:min-h-0 lg:flex-1 lg:overflow-y-auto"
+                  : "overflow-y-visible",
               )}
             >
               <DonationWizardContextProvider value={contextValue}>{children}</DonationWizardContextProvider>
