@@ -36,7 +36,7 @@ test("happy path: general donation, preset amount, submit succeeds", async ({ pa
   await page.getByRole("checkbox", { name: /súhlasím/i }).check();
   await page.getByRole("button", { name: "Odoslať formulár" }).click();
 
-  await expect(page.getByText("Ďakujeme za váš príspevok!")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Ďakujeme za váš príspevok!" })).toBeVisible();
 });
 
 test("submission surfaces an ERROR message from the API instead of succeeding", async ({
@@ -65,7 +65,7 @@ test("submission surfaces an ERROR message from the API instead of succeeding", 
   await page.getByRole("button", { name: "Odoslať formulár" }).click();
 
   await expect(page.getByText("Something went wrong")).toBeVisible();
-  await expect(page.getByText("Ďakujeme za váš príspevok!")).not.toBeVisible();
+  await expect(page.getByRole("heading", { name: "Ďakujeme za váš príspevok!" })).not.toBeVisible();
 });
 
 test("empty required fields block navigation and show inline errors on every step", async ({
@@ -132,7 +132,7 @@ test("empty required fields block navigation and show inline errors on every ste
     "Musíte súhlasiť so spracovaním osobných údajov",
   );
   await expect(page.getByRole("heading", { name: "Skontrolujte si zadané údaje" })).toBeVisible();
-  await expect(page.getByText("Ďakujeme za váš príspevok!")).not.toBeVisible();
+  await expect(page.getByRole("heading", { name: "Ďakujeme za váš príspevok!" })).not.toBeVisible();
   expect(contributeCalls).toBe(0);
 });
 
@@ -172,7 +172,7 @@ test("shelter-specific donation requires a shelter and sends its id to the API",
   await page.getByRole("checkbox", { name: /súhlasím/i }).check();
   await page.getByRole("button", { name: "Odoslať formulár" }).click();
 
-  await expect(page.getByText("Ďakujeme za váš príspevok!")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Ďakujeme za váš príspevok!" })).toBeVisible();
   const body = requestBody as { shelterID: number; value: number };
   expect(body.value).toBe(10);
   expect(body.shelterID).toEqual(expect.any(Number));
@@ -207,7 +207,7 @@ test("custom amount and a CZ phone number are accepted", async ({ page }) => {
   await page.getByRole("checkbox", { name: /súhlasím/i }).check();
   await page.getByRole("button", { name: "Odoslať formulár" }).click();
 
-  await expect(page.getByText("Ďakujeme za váš príspevok!")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Ďakujeme za váš príspevok!" })).toBeVisible();
   expect(requestBody).toMatchObject({ value: 42 });
   expect((requestBody as { contributors: { phone: string }[] }).contributors[0].phone).toMatch(
     /^\+420/,

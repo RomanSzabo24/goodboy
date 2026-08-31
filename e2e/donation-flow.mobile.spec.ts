@@ -51,5 +51,5 @@ test("happy path completes end-to-end on a mobile viewport", async ({ page }) =>
   await expect(submitButton).toBeInViewport();
   await submitButton.click();
 
-  await expect(page.getByText("Ďakujeme za váš príspevok!")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Ďakujeme za váš príspevok!" })).toBeVisible();
 });
