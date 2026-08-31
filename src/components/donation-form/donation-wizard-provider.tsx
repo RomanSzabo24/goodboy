@@ -205,7 +205,9 @@ export function DonationWizardProvider({
                 Setting overflow-y also forces overflow-x to auto (CSS can't mix
                 visible with a non-visible axis), which would otherwise clip
                 focused inputs' rings at the container's edges; the matching
-                -mx-1/px-1 reclaims that space without shifting the content.
+                -mx-1/px-1 (applied at every breakpoint, since overflow-x-clip
+                itself is unconditional) reclaims that space without shifting
+                the content.
                 Skipped on the confirm step: with many contributors its summary
                 can outgrow that bounded box, and a fixed-height inner scroll
                 nested inside the page's own scroll reads as two scrollbars —
@@ -223,7 +225,7 @@ export function DonationWizardProvider({
             <div
               ref={stepContentRef}
               className={cn(
-                "overflow-x-clip lg:-mx-1 lg:px-1",
+                "-mx-1 overflow-x-clip px-1",
                 step !== "confirm"
                   ? "lg:min-h-0 lg:flex-1 lg:overflow-y-auto"
                   : "overflow-y-visible",
