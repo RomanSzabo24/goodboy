@@ -12,6 +12,12 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Generated test-run artifacts, not source — without this ESLint was
+    // scanning playwright-report's bundled/minified vendor JS as if it were
+    // project code.
+    "playwright-report/**",
+    "test-results/**",
+    "coverage/**",
   ]),
 ]);
 
