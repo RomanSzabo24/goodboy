@@ -10,7 +10,7 @@ Full assignment brief: [docs/input/assignment.md](docs/input/assignment.md). API
 - **UI:** shadcn/ui (Radix primitives) + Tailwind CSS v4
 - **Server state:** TanStack Query v5
 - **Form state:** react-hook-form + Zod v4 (via `@hookform/resolvers`)
-- **Shared/multi-step UI state:** Zustand v5
+- **Shared/multi-step UI state:** React Context (URL is the source of truth for the current step)
 - **i18n:** next-intl (Slovak default, English)
 - **Testing:** Vitest + React Testing Library (unit/component), Playwright (e2e)
 
@@ -52,7 +52,6 @@ src/
   i18n/                  # next-intl routing/config
   lib/validations/       # Zod schemas — form input and API response shapes
   services/              # API client functions (shelters, results, contribute)
-  stores/                # Zustand store for multi-step form state
 messages/                # sk/en translation files
 e2e/                      # Playwright specs
 docker/                  # Dockerfile + docker-compose for containerized runs
