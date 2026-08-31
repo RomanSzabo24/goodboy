@@ -97,7 +97,7 @@ export function ShelterStep({ form, shelters, className }: ShelterStepProps) {
             name="shelterId"
             render={({ field }) => (
               <Select
-                value={field.value ? String(field.value) : undefined}
+                value={field.value ? String(field.value) : ""}
                 onValueChange={(value) => field.onChange(Number(value))}
               >
                 <SelectTrigger
